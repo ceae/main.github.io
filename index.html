@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon parcours linguistique</title>
+  <meta name="description" content="Explorez mon parcours linguistique à travers une carte interactive">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --text: #2b2b2b;
+      --accent: #b5533c;
+      --card-bg: #ffffff;
+      --border: #e8e6e1;
+      --success: #2d8659;
+      --warning: #d4a574;
+      --info: #3d5a8f;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #1c1b1a;
+        --text: #ececec;
+        --accent: #e08a6f;
+        --card-bg: #2a2827;
+        --border: #3a3835;
+        --success: #5dd18f;
+        --warning: #e8c397;
+        --info: #7a9dd4;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #1c1b1a;
+      --text: #ececec;
+      --accent: #e08a6f;
+      --card-bg: #2a2827;
+      --border: #3a3835;
+      --success: #5dd18f;
+      --warning: #e8c397;
+      --info: #7a9dd4;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.8rem;
+      color: var(--accent);
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .stat-item {
+      padding: 1rem;
+      background: var(--card-bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+    }
+
+    .stat-value {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      opacity: 0.75;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    section {
+      padding: 1.5rem;
+    }
+
+    section h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.3rem;
+    }
+
+    #map {
+      width: 100%;
+      height: 60vh;
+      min-height: 400px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .map-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .timeline-item {
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-item.native {
+      border-left-color: var(--success);
+    }
+
+    .timeline-item.advanced {
+      border-left-color: var(--warning);
+    }
+
+    .timeline-item.intermediate {
+      border-left-color: var(--info);
+    }
+
+    .timeline-item.other {
+      border-left-color: #999;
+    }
+
+    .timeline-year {
+      display: inline-block;
+      font-size: 0.75rem;
+      background: var(--accent);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-location {
+      font-size: 0.9rem;
+      opacity: 0.75;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-description {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+
+    .timeline-level {
+      display: inline-block;
+      font-size: 0.8rem;
+      background: var(--accent);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .timeline-level.native {
+      background: var(--success);
+    }
+
+    .timeline-level.advanced {
+      background: var(--warning);
+      color: #000;
+    }
+
+    .timeline-level.intermediate {
+      background: var(--info);
+    }
+
+    .timeline-level.other {
+      background: #666;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg) !important;
+      color: var(--text) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .leaflet-popup-tip {
+      background: var(--card-bg) !important;
+    }
+
+    .popup-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .popup-location {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    .popup-description {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .popup-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .popup-level {
+      display: inline-block;
+      font-size: 0.75rem;
+      background: var(--accent);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .popup-year {
+      opacity: 0.75;
+    }
+
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.4rem;
+      }
+
+      #map {
+        height: 50vh;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .map-controls {
+        gap: 0.5rem;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--accent);
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 100;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    :focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="#map" class="skip-link">Aller au contenu principal</a>
+
+<main>
+  <header>
+    <h1>🗺️ Mon parcours linguistique</h1>
+    <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Destinations</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Langues</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">5+</div>
+        <div class="stat-label">Années d'exp.</div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Légende des niveaux</h2>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background: var(--success);"></div>
+        <span>Langue maternelle</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: var(--warning);"></div>
+        <span>Niveau avancé</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: var(--info);"></div>
+        <span>Niveau intermédiaire (B1-B2)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #999;"></div>
+        <span>Autres (traduction, contributions)</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Carte interactive</h2>
+    <div class="map-controls">
+      <button class="filter-btn active" data-filter="all">Tous les points</button>
+      <button class="filter-btn" data-filter="native">Langue maternelle</button>
+      <button class="filter-btn" data-filter="advanced">Avancé</button>
+      <button class="filter-btn" data-filter="intermediate">Intermédiaire</button>
+    </div>
+    <div id="map" role="region" aria-label="Carte interactive du parcours linguistique"></div>
+  </section>
+
+  <section>
+    <h2>Chronologie détaillée</h2>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <footer>
+    <p>Créé avec Leaflet.js • Données à jour • Cliquez sur les marqueurs pour plus d'informations</p>
+  </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+  // Données enrichies avec années, durées et catégories
+  const experiences = [
+    {
+      lat: 48.8566,
+      lng: 2.3522,
+      title: "Paris, France",
+      location: "Île-de-France",
+      desc: "Licence LEA à Paris-Saclay",
+      year: "2019-2023",
+      level: "🇫🇷 Langue maternelle",
+      category: "native",
+      duration: "Parcours complet",
+      progress: "Natif"
+    },
+    {
+      lat: 36.7213,
+      lng: -4.4214,
+      title: "Málaga, Espagne",
+      location: "Andalousie",
+      desc: "Semestre Erasmus — immersion espagnole complète",
+      year: "2021",
+      level: "🇪🇸 Avancé",
+      category: "advanced",
+      duration: "5 mois",
+      progress: "A2 → B1"
+    },
+    {
+      lat: 51.9607,
+      lng: 7.6261,
+      title: "Münster, Allemagne",
+      location: "Rhénanie-du-Nord-Westphalie",
+      desc: "Semestre Erasmus — perfectionnement allemand",
+      year: "2022",
+      level: "🇩🇪 B2",
+      category: "intermediate",
+      duration: "6 mois",
+      progress: "A1 → B2"
+    },
+    {
+      lat: 41.3874,
+      lng: 2.1686,
+      title: "Barcelone, Espagne",
+      location: "Catalogne",
+      desc: "Contributions Tatoeba en catalan et espagnol",
+      year: "2022-2023",
+      level: "🌐 Traduction",
+      category: "other",
+      duration: "Contributions actives",
+      progress: "~500 phrases"
+    }
+  ];
+
+  // État du filtre
+  let currentFilter = 'all';
+  const markers = [];
+
+  // Initialiser la carte
+  const map = L.map('map').setView([46.6, 2.5], 4);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs',
+    maxZoom: 18,
+  }).addTo(map);
+
+  // Fonction pour obtenir la couleur du marqueur selon la catégorie
+  function getMarkerColor(category) {
+    const colors = {
+      native: '#2d8659',
+      advanced: '#d4a574',
+      intermediate: '#3d5a8f',
+      other: '#999'
+    };
+    return colors[category] || '#b5533c';
+  }
+
+  // Fonction pour créer une icône colorée
+  function createColoredMarker(color) {
+    return L.divIcon({
+      html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+      iconSize: [30, 30],
+      className: 'leaflet-div-icon'
+    });
+  }
+
+  // Ajouter les marqueurs
+  experiences.forEach((exp, idx) => {
+    const marker = L.marker([exp.lat, exp.lng], {
+      icon: createColoredMarker(getMarkerColor(exp.category))
+    }).addTo(map);
+
+    const popupContent = `
+      <div class="popup-title">${exp.title}</div>
+      <div class="popup-location">${exp.location}</div>
+      <div class="popup-description">${exp.desc}</div>
+      <div class="popup-meta">
+        <span class="popup-level">${exp.level}</span>
+        <span class="popup-year">${exp.year}</span>
+      </div>
+    `;
+
+    marker.bindPopup(popupContent);
+    marker.dataset = { category: exp.category, index: idx };
+    markers.push(marker);
+  });
+
+  // Filtrer les marqueurs
+  function updateMarkers(filter) {
+    markers.forEach(marker => {
+      if (filter === 'all' || marker.dataset.category === filter) {
+        marker.setOpacity(1);
+        marker.getElement().style.pointerEvents = 'auto';
+      } else {
+        marker.setOpacity(0.3);
+        marker.getElement().style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  // Gestion des boutons de filtre
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      updateMarkers(currentFilter);
+    });
+  });
+
+  // Remplir la timeline
+  const timeline = document.getElementById('timeline');
+  experiences.forEach(exp => {
+    const item = document.createElement('div');
+    item.className = `timeline-item ${exp.category}`;
+    item.innerHTML = `
+      <div class="timeline-year">${exp.year}</div>
+      <div class="timeline-title">${exp.title}</div>
+      <div class="timeline-location">📍 ${exp.location}</div>
+      <div class="timeline-description">${exp.desc}</div>
+      <div style="font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.5rem;">
+        <strong>Durée:</strong> ${exp.duration} • <strong>Progression:</strong> ${exp.progress}
+      </div>
+      <span class="timeline-level ${exp.category}">${exp.level}</span>
+    `;
+    timeline.appendChild(item);
+  });
+
+  // Accessibilité : annoncer les filtres aux lecteurs d'écran
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const label = btn.textContent;
+      console.log(`Filtrage par: ${label}`);
+    });
+  });
+</script>
+
+</body>
+</html>

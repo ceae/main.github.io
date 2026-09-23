@@ -166,21 +166,10 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .timeline-item.native {
-      border-left-color: var(--success);
-    }
-
-    .timeline-item.advanced {
-      border-left-color: var(--warning);
-    }
-
-    .timeline-item.intermediate {
-      border-left-color: var(--info);
-    }
-
-    .timeline-item.other {
-      border-left-color: #999;
-    }
+    .timeline-item.native { border-left-color: var(--success); }
+    .timeline-item.advanced { border-left-color: var(--warning); }
+    .timeline-item.intermediate { border-left-color: var(--info); }
+    .timeline-item.other { border-left-color: #999; }
 
     .timeline-year {
       display: inline-block;
@@ -221,22 +210,10 @@
       border-radius: 4px;
     }
 
-    .timeline-level.native {
-      background: var(--success);
-    }
-
-    .timeline-level.advanced {
-      background: var(--warning);
-      color: #000;
-    }
-
-    .timeline-level.intermediate {
-      background: var(--info);
-    }
-
-    .timeline-level.other {
-      background: #666;
-    }
+    .timeline-level.native { background: var(--success); }
+    .timeline-level.advanced { background: var(--warning); color: #000; }
+    .timeline-level.intermediate { background: var(--info); }
+    .timeline-level.other { background: #666; }
 
     .legend {
       display: grid;
@@ -263,6 +240,39 @@
       flex-shrink: 0;
     }
 
+    /* Marqueurs Leaflet en forme d'épingle */
+    .leaflet-div-icon.custom-marker-icon {
+      background: transparent;
+      border: 0;
+    }
+
+    .custom-marker {
+      width: 34px;
+      height: 34px;
+      background: var(--marker-color);
+      border: 3px solid white;
+      border-radius: 50% 50% 50% 0;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-45deg);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .custom-marker span {
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      transform: rotate(45deg);
+    }
+
+    .leaflet-marker-icon:hover .custom-marker {
+      filter: brightness(1.12);
+      transform: rotate(-45deg) scale(1.1);
+    }
+
     .leaflet-popup-content-wrapper {
       background: var(--card-bg) !important;
       color: var(--text) !important;
@@ -270,9 +280,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
     }
 
-    .leaflet-popup-tip {
-      background: var(--card-bg) !important;
-    }
+    .leaflet-popup-tip { background: var(--card-bg) !important; }
 
     .popup-title {
       font-weight: 600;
@@ -313,9 +321,7 @@
       font-weight: 600;
     }
 
-    .popup-year {
-      opacity: 0.75;
-    }
+    .popup-year { opacity: 0.75; }
 
     footer {
       padding: 1.5rem;
@@ -326,34 +332,13 @@
     }
 
     @media (max-width: 768px) {
-      header {
-        padding: 1.5rem 1rem;
-      }
-
-      header h1 {
-        font-size: 1.4rem;
-      }
-
-      #map {
-        height: 50vh;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .timeline {
-        grid-template-columns: 1fr;
-      }
-
-      .map-controls {
-        gap: 0.5rem;
-      }
-
-      .filter-btn {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.85rem;
-      }
+      header { padding: 1.5rem 1rem; }
+      header h1 { font-size: 1.4rem; }
+      #map { height: 50vh; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .timeline { grid-template-columns: 1fr; }
+      .map-controls { gap: 0.5rem; }
+      .filter-btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
     }
 
     /* Accessibility */
@@ -368,14 +353,8 @@
       z-index: 100;
     }
 
-    .skip-link:focus {
-      top: 0;
-    }
-
-    :focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
+    .skip-link:focus { top: 0; }
+    :focus { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
 </head>
 <body>
@@ -388,40 +367,19 @@
     <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
     
     <div class="stats">
-      <div class="stat-item">
-        <div class="stat-value">4</div>
-        <div class="stat-label">Destinations</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">3</div>
-        <div class="stat-label">Langues</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">5+</div>
-        <div class="stat-label">Années d'exp.</div>
-      </div>
+      <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Destinations</div></div>
+      <div class="stat-item"><div class="stat-value">3</div><div class="stat-label">Langues</div></div>
+      <div class="stat-item"><div class="stat-value">5+</div><div class="stat-label">Années d'exp.</div></div>
     </div>
   </header>
 
   <section>
     <h2>Légende des niveaux</h2>
     <div class="legend">
-      <div class="legend-item">
-        <div class="legend-color" style="background: var(--success);"></div>
-        <span>Langue maternelle</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color" style="background: var(--warning);"></div>
-        <span>Niveau avancé</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color" style="background: var(--info);"></div>
-        <span>Niveau intermédiaire (B1-B2)</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color" style="background: #999;"></div>
-        <span>Autres (traduction, contributions)</span>
-      </div>
+      <div class="legend-item"><div class="legend-color" style="background: var(--success);"></div><span>Langue maternelle</span></div>
+      <div class="legend-item"><div class="legend-color" style="background: var(--warning);"></div><span>Niveau avancé</span></div>
+      <div class="legend-item"><div class="legend-color" style="background: var(--info);"></div><span>Niveau intermédiaire (B1-B2)</span></div>
+      <div class="legend-item"><div class="legend-color" style="background: #999;"></div><span>Autres (traduction, contributions)</span></div>
     </div>
   </section>
 
@@ -448,63 +406,15 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
-  // Données enrichies avec années, durées et catégories
   const experiences = [
-    {
-      lat: 48.8566,
-      lng: 2.3522,
-      title: "Paris, France",
-      location: "Île-de-France",
-      desc: "Licence LEA à Paris-Saclay",
-      year: "2019-2023",
-      level: "🇫🇷 Langue maternelle",
-      category: "native",
-      duration: "Parcours complet",
-      progress: "Natif"
-    },
-    {
-      lat: 36.7213,
-      lng: -4.4214,
-      title: "Málaga, Espagne",
-      location: "Andalousie",
-      desc: "Semestre Erasmus — immersion espagnole complète",
-      year: "2021",
-      level: "🇪🇸 Avancé",
-      category: "advanced",
-      duration: "5 mois",
-      progress: "A2 → B1"
-    },
-    {
-      lat: 51.9607,
-      lng: 7.6261,
-      title: "Münster, Allemagne",
-      location: "Rhénanie-du-Nord-Westphalie",
-      desc: "Semestre Erasmus — perfectionnement allemand",
-      year: "2022",
-      level: "🇩🇪 B2",
-      category: "intermediate",
-      duration: "6 mois",
-      progress: "A1 → B2"
-    },
-    {
-      lat: 41.3874,
-      lng: 2.1686,
-      title: "Barcelone, Espagne",
-      location: "Catalogne",
-      desc: "Contributions Tatoeba en catalan et espagnol",
-      year: "2022-2023",
-      level: "🌐 Traduction",
-      category: "other",
-      duration: "Contributions actives",
-      progress: "~500 phrases"
-    }
+    { lat: 48.8566, lng: 2.3522, title: "Paris, France", location: "Île-de-France", desc: "Licence LEA à Paris-Saclay", year: "2019-2023", level: "🇫🇷 Langue maternelle", category: "native", duration: "Parcours complet", progress: "Natif" },
+    { lat: 36.7213, lng: -4.4214, title: "Málaga, Espagne", location: "Andalousie", desc: "Semestre Erasmus — immersion espagnole complète", year: "2021", level: "🇪🇸 Avancé", category: "advanced", duration: "5 mois", progress: "A2 → B1" },
+    { lat: 51.9607, lng: 7.6261, title: "Münster, Allemagne", location: "Rhénanie-du-Nord-Westphalie", desc: "Semestre Erasmus — perfectionnement allemand", year: "2022", level: "🇩🇪 B2", category: "intermediate", duration: "6 mois", progress: "A1 → B2" },
+    { lat: 41.3874, lng: 2.1686, title: "Barcelone, Espagne", location: "Catalogne", desc: "Contributions Tatoeba en catalan et espagnol", year: "2022-2023", level: "🌐 Traduction", category: "other", duration: "Contributions actives", progress: "~500 phrases" }
   ];
 
-  // État du filtre
   let currentFilter = 'all';
   const markers = [];
-
-  // Initialiser la carte
   const map = L.map('map').setView([46.6, 2.5], 4);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -512,27 +422,22 @@
     maxZoom: 18,
   }).addTo(map);
 
-  // Fonction pour obtenir la couleur du marqueur selon la catégorie
   function getMarkerColor(category) {
-    const colors = {
-      native: '#2d8659',
-      advanced: '#d4a574',
-      intermediate: '#3d5a8f',
-      other: '#999'
-    };
+    const colors = { native: '#2d8659', advanced: '#d4a574', intermediate: '#3d5a8f', other: '#999' };
     return colors[category] || '#b5533c';
   }
 
-  // Fonction pour créer une icône colorée
+  // Crée une icône Leaflet en forme d'épingle, colorée selon la catégorie.
   function createColoredMarker(color) {
     return L.divIcon({
-      html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-      iconSize: [30, 30],
-      className: 'leaflet-div-icon'
+      html: `<div class="custom-marker" style="--marker-color: ${color};"><span></span></div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 34],
+      popupAnchor: [0, -34],
+      className: 'custom-marker-icon'
     });
   }
 
-  // Ajouter les marqueurs
   experiences.forEach((exp, idx) => {
     const marker = L.marker([exp.lat, exp.lng], {
       icon: createColoredMarker(getMarkerColor(exp.category))
@@ -553,30 +458,25 @@
     markers.push(marker);
   });
 
-  // Filtrer les marqueurs
   function updateMarkers(filter) {
     markers.forEach(marker => {
-      if (filter === 'all' || marker.dataset.category === filter) {
-        marker.setOpacity(1);
-        marker.getElement().style.pointerEvents = 'auto';
-      } else {
-        marker.setOpacity(0.3);
-        marker.getElement().style.pointerEvents = 'none';
-      }
+      const isVisible = filter === 'all' || marker.dataset.category === filter;
+      marker.setOpacity(isVisible ? 1 : 0.3);
+      const element = marker.getElement();
+      if (element) element.style.pointerEvents = isVisible ? 'auto' : 'none';
     });
   }
 
-  // Gestion des boutons de filtre
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentFilter = btn.dataset.filter;
       updateMarkers(currentFilter);
+      console.log(`Filtrage par: ${btn.textContent}`);
     });
   });
 
-  // Remplir la timeline
   const timeline = document.getElementById('timeline');
   experiences.forEach(exp => {
     const item = document.createElement('div');
@@ -592,14 +492,6 @@
       <span class="timeline-level ${exp.category}">${exp.level}</span>
     `;
     timeline.appendChild(item);
-  });
-
-  // Accessibilité : annoncer les filtres aux lecteurs d'écran
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const label = btn.textContent;
-      console.log(`Filtrage par: ${label}`);
-    });
   });
 </script>
 

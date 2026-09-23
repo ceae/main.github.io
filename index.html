@@ -367,7 +367,7 @@
     <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
     
     <div class="stats">
-      <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Destinations</div></div>
+      <div class="stat-item"><div class="stat-value">5</div><div class="stat-label">Destinations</div></div>
       <div class="stat-item"><div class="stat-value">3</div><div class="stat-label">Langues</div></div>
       <div class="stat-item"><div class="stat-value">5+</div><div class="stat-label">Années d'exp.</div></div>
     </div>
@@ -406,12 +406,67 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
-  const experiences = [
-    { lat: 48.3724, lng: 2.2533, title: "Evry, France", location: "Île-de-France", desc: "Licence LEA à Paris-Saclay", year: "2023-2026", level: "🇫🇷 Langue maternelle", category: "native", duration: "Parcours complet", progress: "Natif" },
-    { lat: 36.4256, lng: -4.2814, title: "Málaga, Espagne", location: "Andalousie", desc: "Semestre Erasmus — immersion espagnole complète", year: "2024", level: "🇪🇸 Avancé", category: "advanced", duration: "5 mois", progress: "A2 → B1" },
-    { lat: 51.5737, lng: 7.3715, title: "Münster, Allemagne", location: "Rhénanie-du-Nord-Westphalie", desc: "Semestre Erasmus — perfectionnement allemand", year: "2025", level: "🇩🇪 B2", category: "intermediate", duration: "6 mois", progress: "A1 → B2" },
-    { lat: 41.4901, lng: 1.3112, title: "Ainzón, Espagne", location: "Saragosse", desc: "Au pair", year: "2026", level: "C1 espagnol", category: "other", duration: "1 mois", progress: "appris à mieux gérer un enfant " }
-    { lat: 44.2927, lng: 11.1241, title: "Zola Predosa, Italia", location: "Bologna", desc: "Au pair", year: "2026", level: "C1 anglais", category: "other", duration: "3 semaines", progress: "plus à l'aise en italien" }
+    const experiences = [
+    {
+      lat: 48.3724,
+      lng: 2.2533,
+      title: "Évry, France",
+      location: "Île-de-France",
+      desc: "Licence LEA à Paris-Saclay",
+      year: "2023-2026",
+      level: "🇫🇷 Langue maternelle",
+      category: "native",
+      duration: "3 ans",
+      progress: "Formation universitaire en langues étrangères"
+    },
+    {
+      lat: 36.4256,
+      lng: -4.2814,
+      title: "Málaga, Espagne",
+      location: "Andalousie",
+      desc: "Semestre Erasmus — immersion espagnole complète",
+      year: "2024",
+      level: "🇪🇸 Avancé",
+      category: "advanced",
+      duration: "1 semestre",
+      progress: "Passage au niveau avancé"
+    },
+    {
+      lat: 51.5737,
+      lng: 7.3715,
+      title: "Münster, Allemagne",
+      location: "Rhénanie-du-Nord-Westphalie",
+      desc: "Semestre Erasmus — perfectionnement allemand",
+      year: "2025",
+      level: "🇩🇪 B2",
+      category: "intermediate",
+      duration: "1 semestre",
+      progress: "Perfectionnement jusqu'au niveau B2"
+    },
+    {
+      lat: 41.4901,
+      lng: 1.3112,
+      title: "Ainzón, Espagne",
+      location: "Saragosse",
+      desc: "Au pair",
+      year: "2026",
+      level: "C1 espagnol",
+      category: "other",
+      duration: "1 mois",
+      progress: "Pratique quotidienne de l'espagnol"
+    },
+    {
+      lat: 44.2927,
+      lng: 11.1241,
+      title: "Zola Predosa, Italie",
+      location: "Bologne",
+      desc: "Au pair",
+      year: "2026",
+      level: "C1 anglais",
+      category: "other",
+      duration: "3 semaines",
+      progress: "Pratique intensive de l'anglais"
+    }
   ];
 
   let currentFilter = 'all';

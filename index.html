@@ -533,14 +533,13 @@
     });
   });
 
-  const languageInfo = exp.lang_studied
-  ? `<strong>Langues étudiées:</strong> ${exp.lang_studied}`
-  : `<strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken}`;
-
   const timeline = document.getElementById('timeline');
   experiences.forEach(exp => {
     const item = document.createElement('div');
     item.className = `timeline-item ${exp.category}`;
+    const languageInfo = exp.lang_studied
+      ? `<strong>Langues étudiées:</strong> ${exp.lang_studied}`
+      : `<strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken}`;
     item.innerHTML = `
       <div class="timeline-year">${exp.year}</div>
       <div class="timeline-title">${exp.title}</div>

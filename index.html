@@ -533,6 +533,10 @@
     });
   });
 
+  const languageInfo = exp.lang_studied
+  ? `<strong>Langues étudiées:</strong> ${exp.lang_studied}`
+  : `<strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken}`;
+
   const timeline = document.getElementById('timeline');
   experiences.forEach(exp => {
     const item = document.createElement('div');
@@ -543,7 +547,7 @@
       <div class="timeline-location">📍 ${exp.location}</div>
       <div class="timeline-description">${exp.desc}</div>
       <div style="font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.5rem;">
-        <strong>Durée:</strong> ${exp.duration} • <strong>Langues étudiées:</strong> ${exp.lang_studied} • <strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken} 
+        <strong>Durée:</strong> ${exp.duration} • ${languageInfo} 
       </div>
       <span class="timeline-level ${exp.category}">${exp.level}</span>
     `;

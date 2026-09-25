@@ -7,105 +7,36 @@
 
 <style>
   :root {
-    --purple-deep: rgb(22, 8, 95);
-    --purple-violet: rgb(109, 77, 204);
-    --purple-lavender: rgb(131, 119, 183);
-    --void: #05010f;
+    --deep-purple: rgb(22, 8, 95);
+    --violet: rgb(109, 77, 204);
+    --lavender: rgb(131, 119, 183);
   }
 
   * { box-sizing: border-box; }
 
   html, body {
-    height: 100%;
+    min-height: 100vh;
     margin: 0;
     font-family: "Courier New", monospace;
-    color: #d8cfff;
-    overflow-x: hidden;
-    background: var(--void);
+    color: #e8defc;
   }
 
-  /* === BASE LAYER: dark purple void === */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;                 /* no -10% growth, so nothing moves at the borders */
-    z-index: -3;
-
-    background:
-      radial-gradient(circle at 25% 30%, rgba(109, 77, 204, 0.22), transparent 55%),
-      radial-gradient(circle at 75% 70%, rgba(22, 8, 95, 0.98), transparent 60%),
-      radial-gradient(circle at 50% 50%, rgba(131, 119, 183, 0.12), transparent 70%),
-      linear-gradient(160deg, #05010f 0%, #0b0326 40%, #1a0740 70%, #05010f 100%);
-
-    /* only opacity animates — no transform, so borders stay still */
-    animation: breathe 12s ease-in-out infinite;
-    filter: contrast(1.1) saturate(1.2);
+  body {
+    background-color: var(--deep-purple);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(131, 119, 183, 0.35), transparent 45%),
+      radial-gradient(circle at 80% 15%, rgba(109, 77, 204, 0.45), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(22, 8, 95, 0.85), transparent 55%),
+      linear-gradient(
+        135deg,
+        var(--deep-purple) 0%,
+        var(--violet) 50%,
+        var(--lavender) 100%
+      );
+    background-attachment: fixed;
   }
 
-  @keyframes breathe {
-    0%, 100% { opacity: 0.9; }
-    50%      { opacity: 1; }
-  }
-
-  /* === FOG LAYER: subtle drifting mist (contained, no border shift) === */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-
-    background:
-      radial-gradient(ellipse at 30% 40%, rgba(131, 119, 183, 0.15), transparent 45%),
-      radial-gradient(ellipse at 70% 60%, rgba(109, 77, 204, 0.12), transparent 50%),
-      radial-gradient(ellipse at 50% 20%, rgba(22, 8, 95, 0.4), transparent 60%);
-
-    mix-blend-mode: screen;
-    /* very slight opacity pulse only, no movement */
-    animation: hazePulse 14s ease-in-out infinite;
-  }
-
-  @keyframes hazePulse {
-    0%, 100% { opacity: 0.75; }
-    50%      { opacity: 1; }
-  }
-
-  /* === VIGNETTE === */
-  .vignette {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: radial-gradient(
-      ellipse at center,
-      transparent 40%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
-  }
-
-  /* === GRAIN === */
-  .grain {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.08;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    animation: grainShift 0.6s steps(3) infinite;
-  }
-
-  @keyframes grainShift {
-    0%   { transform: translate(0, 0); }
-    25%  { transform: translate(-3%, 2%); }
-    50%  { transform: translate(2%, -3%); }
-    75%  { transform: translate(-2%, -2%); }
-    100% { transform: translate(0, 0); }
-  }
-
-  /* === CONTENT === */
   .content {
-    position: relative;
-    z-index: 1;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -125,10 +56,8 @@
       0 0 60px rgba(22, 8, 95, 0.9);
     position: relative;
     user-select: none;
-    /* flicker removed */
   }
 
-  /* === GLITCH === */
   .title::before,
   .title::after {
     content: attr(data-text);
@@ -140,7 +69,7 @@
   }
 
   .title::before {
-    color: #7a0000;          /* blood-red */
+    color: #7a0000;
     left: 2px;
     text-shadow: -2px 0 #7a0000;
     animation: glitchTop 3s infinite steps(2, end);
@@ -148,7 +77,7 @@
   }
 
   .title::after {
-    color: #b8a8d0;          /* pale violet */
+    color: #b8a8d0;
     left: -2px;
     text-shadow: 2px 0 #b8a8d0;
     animation: glitchBottom 2.7s infinite steps(2, end);
@@ -168,37 +97,13 @@
     94% { transform: translate(-3px, -1px); opacity: 0.5; }
     96% { transform: translate(2px, -2px); opacity: 0.8; }
   }
-
-  /* === SCANLINE OVERLAY (remove the div if too much) === */
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 0px,
-      rgba(0, 0, 0, 0) 2px,
-      rgba(0, 0, 0, 0.25) 3px,
-      rgba(0, 0, 0, 0) 4px
-    );
-    opacity: 0.35;
-    mix-blend-mode: multiply;
-  }
 </style>
 </head>
 <body>
 
-  <div class="vignette"></div>
-  <div class="grain"></div>
-  <div class="scanlines"></div>
-
   <main class="content">
     <h1 class="title" data-text="L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠">L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠</h1>
   </main>
-
-</body>
-</html>
 
 </body>
 </html>

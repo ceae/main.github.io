@@ -7,9 +7,9 @@
 
 <style>
   :root {
-    --deep-purple: rgb(22, 8, 95);
-    --violet: rgb(109, 77, 204);
-    --lavender: rgb(131, 119, 183);
+    --deep-purple: rgb(10, 4, 40);      /* darker */
+    --violet: rgb(55, 25, 120);         /* darker */
+    --lavender: rgb(80, 70, 120);       /* darker / muted */
   }
 
   * { box-sizing: border-box; }
@@ -18,15 +18,17 @@
     min-height: 100vh;
     margin: 0;
     font-family: "Courier New", monospace;
-    color: #e8defc;
+    color: #d8cfff;
+    overflow-x: hidden;
   }
 
+  /* === DARKER GRADIENT BACKGROUND === */
   body {
     background-color: var(--deep-purple);
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(131, 119, 183, 0.35), transparent 45%),
-      radial-gradient(circle at 80% 15%, rgba(109, 77, 204, 0.45), transparent 50%),
-      radial-gradient(circle at 50% 85%, rgba(22, 8, 95, 0.85), transparent 55%),
+      radial-gradient(circle at 20% 20%, rgba(80, 70, 120, 0.30), transparent 45%),
+      radial-gradient(circle at 80% 15%, rgba(55, 25, 120, 0.45), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(10, 4, 40, 0.95), transparent 55%),
       linear-gradient(
         135deg,
         var(--deep-purple) 0%,
@@ -36,7 +38,44 @@
     background-attachment: fixed;
   }
 
+  /* === FLOATING MYSTICAL GLYPHS === */
+  .glyphs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+    color: rgb(180, 150, 220);
+  }
+
+  .glyphs span {
+    position: absolute;
+    font-weight: 700;
+    text-shadow:
+      0 0 12px currentColor,
+      0 0 30px rgba(120, 80, 200, 0.6),
+      0 0 60px rgba(40, 15, 90, 0.9);
+    will-change: opacity, transform;
+    animation: drift ease-in-out infinite;
+    transform: rotate(var(--rot, 0deg));
+  }
+
+  @keyframes drift {
+    0%, 100% {
+      opacity: 0;
+      transform: translateY(0) rotate(var(--rot, 0deg)) scale(0.95);
+    }
+    50% {
+      opacity: var(--peak, 0.18);
+      transform: translateY(-18px) rotate(var(--rot, 0deg)) scale(1.05);
+    }
+  }
+
+  /* === CONTENT === */
   .content {
+    position: relative;
+    z-index: 1;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -57,39 +96,54 @@
     position: relative;
     user-select: none;
   }
-
-  .title::before,
-  .title::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    text-shadow: none;
-    pointer-events: none;
-    opacity: 0;
-  }
-
-  .title::before {
-    color: #7a0000;
-    left: 2px;
-    text-shadow: -2px 0 #7a0000;
-    animation: glitchTop 3s infinite steps(2, end);
-    mix-blend-mode: screen;
-  }
-
-  .title::after {
-    color: #b8a8d0;
-    left: -2px;
-    text-shadow: 2px 0 #b8a8d0;
-    animation: glitchBottom 2.7s infinite steps(2, end);
-    mix-blend-mode: screen;
-  }
 </style>
 </head>
 <body>
 
+  <div class="glyphs" aria-hidden="true"></div>
+
   <main class="content">
-    <h1 class="title" data-text="L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠">L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠</h1>
+    <h1 class="title">L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠</h1>
   </main>
+
+  <script>
+    // Characters chosen to fit the "lost in translations" theme:
+    // language, voice, silence, forgetting, dream, shadow, void, ghost, soul, fog, night, curse...
+    const chars = [
+      '迷', '譯', '言', '語', '聲', '默', '忘', '幻', '夢', '影',
+      '虛', '冥', '幽', '魂', '夜', '霧', '暗', '靜', '殤', '咒',
+      '殞', '魘', '魄', '魍'
+    ];
+
+    const container = document.querySelector('.glyphs');
+    const count = 45;
+
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span');
+      span.textContent = chars[Math.floor(Math.random() * chars.length)];
+
+      // position
+      span.style.left = Math.random() * 100 + '%';
+      span.style.top  = Math.random() * 100 + '%';
+
+      // size — big, so they feel like looming presences
+      span.style.fontSize = (Math.random() * 90 + 30) + 'px';
+
+      // faint, but the peak opacity makes them fade in/out like whispers
+      span.style.opacity = 0;
+      span.style.setProperty('--peak', (Math.random() * 0.18 + 0.05).toFixed(3));
+
+      // slight rotation for organic, disorienting feel
+      span.style.setProperty('--rot', (Math.random() * 60 - 30).toFixed(1) + 'deg');
+
+      // random animation timing so they don't pulse in sync
+      const duration = Math.random() * 10 + 10;   // 10–20s
+      span.style.animationDuration = duration + 's';
+      span.style.animationDelay = (-Math.random() * duration) + 's';
+
+      container.appendChild(span);
+    }
+  </script>
 
 </body>
 </html>

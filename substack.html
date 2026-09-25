@@ -2,18 +2,166 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Ma page de test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Mes traductions, essais de traduction et notes de lecture en français, allemand, italien, anglais et espagnol."
+    />
+    <title>Mes Traductions | Alexandre</title>
+    <style>
+      :root {
+        --bg: #f6f3ee;
+        --card: #ffffff;
+        --text: #1d1d1d;
+        --muted: #5f5f5f;
+        --accent: #2d5bff;
+        --border: #e7e0d7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+
+      .subtitle {
+        margin: 0 auto;
+        max-width: 700px;
+        font-size: 1.05rem;
+        color: var(--muted);
+      }
+
+      .posts {
+        display: grid;
+        gap: 20px;
+      }
+
+      article {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 20px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .meta {
+        margin: 0 0 10px;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .excerpt {
+        margin: 0 0 14px;
+        font-size: 1.05rem;
+      }
+
+      a {
+        display: inline-block;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
-    <h1 style="text-align: center;">Mes Traductions</h1>
-    <h2 style="text-align: center;">Je me donne une vingtaine de minutes et aucune aide de l'IA ou d'un dictionnaire </h2>
-    <div class="substack-post-embed"><p lang="fr">FR/DE/IT/EN/ES par alexandre</p><p>tough one ngl</p><a data-post-link href="https://emmileo.substack.com/p/frdeitenes">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit-649">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">first attempt to quadruple language translation FR/EN/DE/IT par alexandre</p><p>i gave myself 10/15 minutes and no help from any AI nor dictionnary</p><a data-post-link href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">first translation of a news article since a long time par alexandre</p><p>there's room for improvement i know</p><a data-post-link href="https://emmileo.substack.com/p/first-translation-of-a-news-article">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    
+    <main>
+      <header>
+        <h1>Mes Traductions</h1>
+        <p class="subtitle">
+          Je me donne une vingtaine de minutes et aucune aide de l'IA ni d'un
+          dictionnaire.
+        </p>
+      </header>
+
+      <section class="posts" aria-label="Articles de traduction">
+        <article>
+          <p class="meta">FR / DE / IT / EN / ES • alexandre</p>
+          <p class="excerpt">tough one ngl</p>
+          <a
+            href="https://emmileo.substack.com/p/frdeitenes"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lire sur Substack
+          </a>
+        </article>
+
+        <article>
+          <p class="meta">FR / EN / DE / IT • alexandre</p>
+          <p class="excerpt">Première tentative de traduction en plusieurs langues.</p>
+          <a
+            href="https://emmileo.substack.com/p/frendeit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lire sur Substack
+          </a>
+        </article>
+
+        <article>
+          <p class="meta">FR / EN / DE / IT • alexandre</p>
+          <p class="excerpt">Quadruple language translation.</p>
+          <a
+            href="https://emmileo.substack.com/p/quadruple-lang-translation-fren-deit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lire sur Substack
+          </a>
+        </article>
+
+        <article>
+          <p class="meta">FR / EN / DE / IT • alexandre</p>
+          <p class="excerpt">First attempt to quadruple language translation.</p>
+          <a
+            href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language-translation-fren-deit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lire sur Substack
+          </a>
+        </article>
+
+        <article>
+          <p class="meta">FR / EN / DE / IT • alexandre</p>
+          <p class="excerpt">Première traduction d’un article de presse depuis longtemps.</p>
+          <a
+            href="https://emmileo.substack.com/p/first-translation-of-a-news-article-since-a-long-time"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lire sur Substack
+          </a>
+        </article>
+      </section>
+    </main>
   </body>
 </html>

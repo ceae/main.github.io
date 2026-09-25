@@ -34,30 +34,42 @@
       .content-wrapper {
         display: flex;
         align-items: flex-start;
-        gap: 2.5rem;
+        gap: 0;
         margin-top: 2rem;
       }
 
       .substack-column {
         margin-left: 80px;
-        flex: 1;
+        flex: 1 1 auto;
         min-width: 0;
       }
 
       .latest-translation {
-        flex: 0 0 130px;
+        flex: 0 0 min(30vw, 420px);
+        max-width: 420px;
         padding-left: 1.5rem;
+        margin-left: auto;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       .latest-translation h1 {
         font-family: "Fraunces", serif;
         font-weight: 600;
         color: #22405a;
-        margin-top: 0;
+        margin: 0 0 1rem 0;
+        text-align: center;
       }
 
       .latest-translation-content {
         min-height: 220px;
+        width: 100%;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #1f2933;
       }
     </style>
   </head>
@@ -67,18 +79,18 @@
 
     <div class="content-wrapper">
       <div class="substack-column">
-        <div class="substack-post-embed"><p lang="fr">FR/DE/IT/EN/ES par alexandre</p><p>tough one ngl</p><a data-post-link href="https://emmileo.substack.com/p/frdeitenes">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-        <div class="substack-post-embed"><p lang="fr">FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit-649">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-        <div class="substack-post-embed"><p lang="fr">first attempt to quadruple language translation FR/EN/DE/IT par alexandre</p><p>i gave myself 10/15 minutes and no help from any AI nor dictionnary</p><a data-post-link href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-        <div class="substack-post-embed"><p lang="fr">first translation of a news article since a long time par alexandre</p><p>there's room for improvement i know</p><a data-post-link href="https://emmileo.substack.com/p/first-translation-of-a-news-article">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">FR/DE/IT/EN/ES par alexandre</p><p>tough one ngl</p><a data-post-link href="https://emmileo.substack.com/p/frdeitenes">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-freendeit-649">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-freendeit">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">first attempt to quadruple language translation FR/EN/DE/IT par alexandre</p><p>i gave myself 10/15 minutes and no help from any AI nor dictionary</p><a data-post-link href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">first translation of a news article since a long time par alexandre</p><p>there's room for improvement i know</p><a data-post-link href="https://emmileo.substack.com/p/first-translation-of-a-news-article">Lire sur Substack</a></div><script async src="https://substack.com/embeds/embed.js" charset="utf-8"></script>
       </div>
 
       <aside class="latest-translation">
         <h1>Dernière traduction en date :</h1>
         <div class="latest-translation-content">
-          <!-- Ajoute ton texte ici -->
+          Il est impossible de passer à côté de la venue du pape, le 25 septembre, à Paris. Comme de nombreux catholiques, nous nous réjouissons que Léon XIV ait choisi de se rendre en France à notre rencontre.
         </div>
       </aside>
     </div>

@@ -28,29 +28,30 @@
   body::before {
     content: "";
     position: fixed;
-    inset: -10%;
+    inset: 0;                 /* no -10% growth, so nothing moves at the borders */
     z-index: -3;
 
     background:
       radial-gradient(circle at 25% 30%, rgba(109, 77, 204, 0.22), transparent 55%),
-      radial-gradient(circle at 75% 70%, rgba(22, 8, 95, 0.85), transparent 60%),
+      radial-gradient(circle at 75% 70%, rgba(22, 8, 95, 0.98), transparent 60%),
       radial-gradient(circle at 50% 50%, rgba(131, 119, 183, 0.12), transparent 70%),
       linear-gradient(160deg, #05010f 0%, #0b0326 40%, #1a0740 70%, #05010f 100%);
 
+    /* only opacity animates — no transform, so borders stay still */
     animation: breathe 12s ease-in-out infinite;
     filter: contrast(1.1) saturate(1.2);
   }
 
   @keyframes breathe {
-    0%, 100% { transform: scale(1); opacity: 0.9; }
-    50%      { transform: scale(1.05); opacity: 1; }
+    0%, 100% { opacity: 0.9; }
+    50%      { opacity: 1; }
   }
 
-  /* === FOG LAYER: drifting mist === */
+  /* === FOG LAYER: subtle drifting mist (contained, no border shift) === */
   body::after {
     content: "";
     position: fixed;
-    inset: -50%;
+    inset: 0;
     z-index: -2;
     pointer-events: none;
 
@@ -59,14 +60,14 @@
       radial-gradient(ellipse at 70% 60%, rgba(109, 77, 204, 0.12), transparent 50%),
       radial-gradient(ellipse at 50% 20%, rgba(22, 8, 95, 0.4), transparent 60%);
 
-    animation: drift 30s linear infinite;
     mix-blend-mode: screen;
+    /* very slight opacity pulse only, no movement */
+    animation: hazePulse 14s ease-in-out infinite;
   }
 
-  @keyframes drift {
-    0%   { transform: translate3d(-5%, -3%, 0) rotate(0deg); }
-    50%  { transform: translate3d(5%, 3%, 0) rotate(180deg); }
-    100% { transform: translate3d(-5%, -3%, 0) rotate(360deg); }
+  @keyframes hazePulse {
+    0%, 100% { opacity: 0.75; }
+    50%      { opacity: 1; }
   }
 
   /* === VIGNETTE === */
@@ -78,7 +79,7 @@
     background: radial-gradient(
       ellipse at center,
       transparent 40%,
-      rgba(0, 0, 0, 0.75) 100%
+      rgba(0, 0, 0, 0.8) 100%
     );
   }
 
@@ -107,7 +108,6 @@
     z-index: 1;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -123,9 +123,9 @@
       0 0 8px rgba(131, 119, 183, 0.8),
       0 0 24px rgba(109, 77, 204, 0.6),
       0 0 60px rgba(22, 8, 95, 0.9);
-    animation: flicker 5s infinite;
     position: relative;
     user-select: none;
+    /* flicker removed */
   }
 
   /* === GLITCH === */
@@ -136,64 +136,40 @@
     inset: 0;
     text-shadow: none;
     pointer-events: none;
+    opacity: 0;
   }
 
   .title::before {
-    color: #ff2a6d;
+    color: #7a0000;          /* blood-red */
     left: 2px;
-    text-shadow: -2px 0 #ff2a6d;
+    text-shadow: -2px 0 #7a0000;
     animation: glitchTop 3s infinite steps(2, end);
     mix-blend-mode: screen;
-    opacity: 0.7;
   }
 
   .title::after {
-    color: #00e5ff;
+    color: #b8a8d0;          /* pale violet */
     left: -2px;
-    text-shadow: 2px 0 #00e5ff;
+    text-shadow: 2px 0 #b8a8d0;
     animation: glitchBottom 2.7s infinite steps(2, end);
     mix-blend-mode: screen;
-    opacity: 0.7;
   }
 
   @keyframes glitchTop {
     0%, 92%, 100% { transform: translate(0); opacity: 0; }
-    93% { transform: translate(-3px, -2px); opacity: 0.8; }
-    95% { transform: translate(3px, 1px); opacity: 0.6; }
-    97% { transform: translate(-2px, 2px); opacity: 0.9; }
+    93% { transform: translate(-3px, -2px); opacity: 0.7; }
+    95% { transform: translate(3px, 1px);  opacity: 0.5; }
+    97% { transform: translate(-2px, 2px); opacity: 0.8; }
   }
 
   @keyframes glitchBottom {
     0%, 90%, 100% { transform: translate(0); opacity: 0; }
-    91% { transform: translate(3px, 2px); opacity: 0.8; }
-    94% { transform: translate(-3px, -1px); opacity: 0.6; }
-    96% { transform: translate(2px, -2px); opacity: 0.9; }
+    91% { transform: translate(3px, 2px);  opacity: 0.7; }
+    94% { transform: translate(-3px, -1px); opacity: 0.5; }
+    96% { transform: translate(2px, -2px); opacity: 0.8; }
   }
 
-  @keyframes flicker {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
-      opacity: 1;
-    }
-    20%, 24%, 55% {
-      opacity: 0.55;
-    }
-  }
-
-  .subtitle {
-    margin-top: 2rem;
-    font-size: clamp(0.8rem, 1.5vw, 1rem);
-    letter-spacing: 0.5em;
-    color: rgba(131, 119, 183, 0.65);
-    text-transform: uppercase;
-    animation: whisper 6s ease-in-out infinite;
-  }
-
-  @keyframes whisper {
-    0%, 100% { opacity: 0.4; letter-spacing: 0.5em; }
-    50%      { opacity: 0.9; letter-spacing: 0.55em; }
-  }
-
-  /* === SCANLINE OVERLAY (optional, remove if too much) === */
+  /* === SCANLINE OVERLAY (remove the div if too much) === */
   .scanlines {
     position: fixed;
     inset: 0;
@@ -218,11 +194,11 @@
   <div class="scanlines"></div>
 
   <main class="content">
-    <h1 class="title" data-text="LOST IN TRANSLATIONS">
-      Ḻ̶̛̦̼̐̋̐̈Ȏ̸͔͙̮̈̂̄̆̒́S̵͔̀̓͋̽͝T̷̢̠̗̯̗̣̉̽̒̕ I̶̘͊̄̉N̵̟͕̤̄͑ T̷̳͓̦̓̃͛̾R̷̛̝̟̭̻͖̩͐̕A̴̢̤̰̝̰̻̳͌͑͝N̸̫̫̲̞̘̝̈͋͗Ṣ̶̘̳͂̈́L̸̬͔͕͍͙͛̋À̶̱̯̯́̈́T̸̹̱̖̔́̀̒͛͒͝Ỉ̶̘͚̦̞̥̱͇͋Ǒ̷̟͓̮̖̀̆̈̽N̵̛͇͚̼͊͂̇̒̄S̵͇͘͝
-    </h1>
-    <p class="subtitle">something got lost along the way</p>
+    <h1 class="title" data-text="L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠">L̴̘̐̿O̶̢̬͘Ś̶̞̕T̸̰̄ ̵̳̚I̷̻͓͝N̶͖̺͐ ̶̡̛͈̂T̸̨̜̐̈́R̸̲̱̒̀A̴̝͘Ñ̴̮̾S̴̺̏L̷̝̀̍Å̶̺T̷̮̻̎͝I̷͈̥̓Ô̵̝̯N̸̜̮̏S̴̨̢̿͠</h1>
   </main>
+
+</body>
+</html>
 
 </body>
 </html>

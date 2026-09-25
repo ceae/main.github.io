@@ -107,43 +107,52 @@
   </main>
 
   <script>
-    // Characters chosen to fit the "lost in translations" theme:
-    // language, voice, silence, forgetting, dream, shadow, void, ghost, soul, fog, night, curse...
-    const chars = [
-      '迷', '譯', '言', '語', '聲', '默', '忘', '幻', '夢', '影',
-      '虛', '冥', '幽', '魂', '夜', '霧', '暗', '靜', '殤', '咒',
-      '殞', '魘', '魄', '魍'
-    ];
+  // Mélange de caractères isolés ET de fragments de langues,
+  // pour évoquer des phrases brisées perdues dans la traduction.
+  const chars = [
+    // === chinois mystique (original) ===
+    '迷', '譯', '言', '語', '聲', '默', '忘', '幻', '夢', '影',
+    '虛', '冥', '幽', '魂', '夜', '霧', '暗', '靜', '殤', '咒',
+    '殞', '魘', '魄', '魍',
 
-    const container = document.querySelector('.glyphs');
-    const count = 45;
+    // === fragments de la phrase multilingue ===
+    'я', 'freue', 'mich', 'über', '今日', '因为', 'εγώ',
+    'molte', 'もの', 'gemacht', 'habe', 've', 'bugün',
+    '很', 'きれい','я', 'я', 'freue', 'über', '今日', 
+    '今日', '因为', 'εγώ', 'molte', 'もの', 'gemacht',
+    've', 'bugün', '很', 'きれい',
 
-    for (let i = 0; i < count; i++) {
-      const span = document.createElement('span');
-      span.textContent = chars[Math.floor(Math.random() * chars.length)];
+    // === caractères isolés tirés de la même phrase ===
+    '今', '日', '因', '为', 'も', 'の', 'き', 'れ', 'い',
+    'ε', 'γ', 'ώ', 'ü'
+  ];
 
-      // position
-      span.style.left = Math.random() * 100 + '%';
-      span.style.top  = Math.random() * 100 + '%';
+  const container = document.querySelector('.glyphs');
+  const count = 55;   // un peu plus de glyphes pour noyer la page
 
-      // size — big, so they feel like looming presences
-      span.style.fontSize = (Math.random() * 90 + 30) + 'px';
+  for (let i = 0; i < count; i++) {
+    const span = document.createElement('span');
+    span.textContent = chars[Math.floor(Math.random() * chars.length)];
 
-      // faint, but the peak opacity makes them fade in/out like whispers
-      span.style.opacity = 0;
-      span.style.setProperty('--peak', (Math.random() * 0.18 + 0.05).toFixed(3));
+    span.style.left = Math.random() * 100 + '%';
+    span.style.top  = Math.random() * 100 + '%';
 
-      // slight rotation for organic, disorienting feel
-      span.style.setProperty('--rot', (Math.random() * 60 - 30).toFixed(1) + 'deg');
+    // taille — parfois très grand pour les caractères isolés, plus discret pour les mots
+    const isWord = span.textContent.length > 1;
+    span.style.fontSize = isWord
+      ? (Math.random() * 30 + 18) + 'px'    // mots plus petits
+      : (Math.random() * 90 + 30) + 'px';   // caractères isolés plus grands
 
-      // random animation timing so they don't pulse in sync
-      const duration = Math.random() * 10 + 10;   // 10–20s
-      span.style.animationDuration = duration + 's';
-      span.style.animationDelay = (-Math.random() * duration) + 's';
+    span.style.opacity = 0;
+    span.style.setProperty('--peak', (Math.random() * 0.18 + 0.05).toFixed(3));
+    span.style.setProperty('--rot', (Math.random() * 60 - 30).toFixed(1) + 'deg');
 
-      container.appendChild(span);
-    }
-  </script>
+    const duration = Math.random() * 10 + 10;   // 10–20s
+    span.style.animationDuration = duration + 's';
+    span.style.animationDelay = (-Math.random() * duration) + 's';
 
+    container.appendChild(span);
+  }
+</script>
 </body>
 </html>

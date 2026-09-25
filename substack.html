@@ -4,24 +4,84 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Ma page de test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      body {
+        font-family: Georgia, "Times New Roman", serif;
+        color: #1f2933;
+      }
+
       h1 {
-        color: green;
-        width: 40px;
-        margin: 0 0 0.5rem 0;
-        font-size: 1.8rem;
+        text-align: center;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 2.6rem;
+        color: #22405a;
+        margin: 0.5rem 0 0.5rem 0;
+      }
+
+      h2 {
+        text-align: center;
+        font-weight: normal;
+        color: #3d4f5e;
+      }
+
+      .content-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 2.5rem;
+        margin-top: 2rem;
+      }
+
+      .substack-column {
+        margin-left: 40px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .latest-translation {
+        flex: 0 0 260px;
+        padding-left: 1.5rem;
+        border-left: 2px solid #22405a;
+      }
+
+      .latest-translation h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        color: #22405a;
+        margin-top: 0;
+      }
+
+      .latest-translation-content {
+        min-height: 220px;
       }
     </style>
   </head>
   <body>
-    <h1 style="text-align: center;">Mes Traductions</h1>
-    <h2 style="text-align: center;">Je me donne une vingtaine de minutes et aucune aide de l'IA ou d'un dictionnaire </h2>
-    <div class="substack-post-embed"><p lang="fr">FR/DE/IT/EN/ES par alexandre</p><p>tough one ngl</p><a data-post-link href="https://emmileo.substack.com/p/frdeitenes">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit-649">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">first attempt to quadruple language translation FR/EN/DE/IT par alexandre</p><p>i gave myself 10/15 minutes and no help from any AI nor dictionnary</p><a data-post-link href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    <div class="substack-post-embed"><p lang="fr">first translation of a news article since a long time par alexandre</p><p>there's room for improvement i know</p><a data-post-link href="https://emmileo.substack.com/p/first-translation-of-a-news-article">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
-    
+    <h1>Mes Traductions</h1>
+    <h2>Je me donne une vingtaine de minutes et aucune aide de l'IA ou d'un dictionnaire</h2>
+
+    <div class="content-wrapper">
+      <div class="substack-column">
+        <div class="substack-post-embed"><p lang="fr">FR/DE/IT/EN/ES par alexandre</p><p>tough one ngl</p><a data-post-link href="https://emmileo.substack.com/p/frdeitenes">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit-649">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">quadruple lang translation FR/EN/DE/IT par alexandre</p><p></p><a data-post-link href="https://emmileo.substack.com/p/quadruple-lang-translation-frendeit">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">first attempt to quadruple language translation FR/EN/DE/IT par alexandre</p><p>i gave myself 10/15 minutes and no help from any AI nor dictionnary</p><a data-post-link href="https://emmileo.substack.com/p/first-attempt-to-quadruple-language">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+        <div class="substack-post-embed"><p lang="fr">first translation of a news article since a long time par alexandre</p><p>there's room for improvement i know</p><a data-post-link href="https://emmileo.substack.com/p/first-translation-of-a-news-article">Lire sur Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
+      </div>
+
+      <aside class="latest-translation">
+        <h3>Dernière traduction en date :</h3>
+        <div class="latest-translation-content">
+          <!-- Ajoute ton texte ici -->
+        </div>
+      </aside>
+    </div>
   </body>
 </html>

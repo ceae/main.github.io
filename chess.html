@@ -7,17 +7,15 @@
 <title>Mon dernier chef-d'œuvre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Underwater palette from the reference */
     --blue-light:  rgba(233, 241, 247, 1);
     --blue-mid:    rgba(185, 214, 232, 1);
     --blue-deep:   rgba(173, 208, 240, 1);
 
-    /* Board squares */
-    --sq-light: #e9f1f7;   /* rgba(233, 241, 247) */
-    --sq-dark:  #add0f0;   /* rgba(173, 208, 240) */
+    --sq-light: #e9f1f7;
+    --sq-dark:  #add0f0;
 
     --hl:    rgba(185, 214, 232, 0.65);
     --check: rgba(255, 100, 100, 0.55);
@@ -44,7 +42,6 @@
     touch-action: manipulation;
   }
 
-  /* ---------- underwater backdrop ---------- */
   body::before {
     content: '';
     position: fixed; inset: -10%;
@@ -62,7 +59,6 @@
     100% { transform: translate3d(-2%, -1%, 0) scale(1.05); }
   }
 
-  /* subtle floating light specks */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -84,9 +80,7 @@
     50%      { transform: translateY(-14px);  opacity: 1;    }
   }
 
-  /* =====================================================================
-     LANDING PAGE
-     ===================================================================== */
+  /* ===================== LANDING ===================== */
   #landing {
     position: fixed; inset: 0;
     display: flex;
@@ -95,6 +89,7 @@
     padding: 6vmin 5vw;
     z-index: 10;
     transition: opacity 0.9s ease, transform 1.1s cubic-bezier(.4, 0, .2, 1);
+    cursor: pointer;
   }
 
   #landing.gone {
@@ -169,6 +164,7 @@
     letter-spacing: 0.01em;
     transition: color 0.4s ease, transform 0.4s ease;
     -webkit-tap-highlight-color: transparent;
+    pointer-events: none; /* géré par le handler global */
   }
 
   #startBtn::after {
@@ -183,18 +179,16 @@
     opacity: 0.7;
   }
 
-  #startBtn:hover {
+  #landing:hover #startBtn {
     color: var(--blue-light);
     transform: translateY(-2px);
   }
 
-  #startBtn:hover::after {
+  #landing:hover #startBtn::after {
     transform: scaleX(1);
   }
 
-  /* =====================================================================
-     GAME
-     ===================================================================== */
+  /* ===================== GAME ===================== */
   #game {
     position: fixed;
     inset: 0;
@@ -246,7 +240,6 @@
                 rgba(255,90,90,0)   75%);
   }
 
-  /* ---------- coordinates ---------- */
   .coord {
     position: absolute;
     font-family: 'Inter', sans-serif;
@@ -260,7 +253,6 @@
   .coord.on-light { color: #6a8eb5; }
   .coord.on-dark  { color: #e9f1f7; }
 
-  /* ---------- pieces ---------- */
   #pieces { position: absolute; inset: 0; pointer-events: none; }
 
   .piece {
@@ -292,7 +284,7 @@
   .piece.no-anim { transition: none !important; }
   .piece.gone    { opacity: 0; }
 
-  /* ---------- HUD ---------- */
+  /* ===================== HUD ===================== */
   #hud {
     position: fixed; inset: 0;
     pointer-events: none;
@@ -348,7 +340,6 @@
   .dot.w { background: #f5faff; }
   .dot.b { background: #0b2038; box-shadow: 0 0 0 1px rgba(233, 241, 247, 0.55); }
 
-  /* Mobile small adjustments */
   @media (max-width: 640px) {
     blockquote { font-size: clamp(1.4rem, 6.2vmin, 2.2rem); }
     .attribution { margin-bottom: 6vmin; }
@@ -357,7 +348,6 @@
 </head>
 <body>
 
-<!-- ===================== LANDING ===================== -->
 <div id="landing">
   <div class="landing-inner">
     <span class="quote-mark" aria-hidden="true">“</span>
@@ -372,7 +362,6 @@
   </div>
 </div>
 
-<!-- ===================== GAME ===================== -->
 <div id="game">
   <div id="board">
     <div id="squares"></div>
@@ -398,6 +387,9 @@
 'use strict';
 
 /* =====================================================================
+   ██  PASTEZ VOTRE PGN ICI  ██
+   ===================================================================== */
+const PGN = `
 1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 e5 6. Ndb5 d6 7. Bg5 a6 8. Na3
 b5 9. Nd5 Be7 10. Bxf6 Bxf6 11. c4 b4 12. Nc2 (12. Nxb4 Qa5) 12... Rb8 (12...
 O-O 13. Ncxb4 Nxb4 14. Nxb4 Qb6 15. Qb3 (15. Nd3 Bb7 16. f3 Bh4+ 17. g3 Bg5 18.
@@ -411,15 +403,11 @@ Qd7 21. h3 (21. f4 Qa7 22. fxg5 Nxb3+ 23. Nde3 Nxa1 24. Qxa1) 21... a5 22. Qd3
 Nxa1 26. Rxa1 (26. Rxf7 Qxf7 (26... Kxf7 27. Qxh7) 27. Ne7+ (27. Ngf6+) (27.
 Ndf6+ gxf6 (27... Kh8)))) 24. fxe5) 23... Rbf8 24. Nc2 Nf3+ 25. Kh1 Nd2 26. Rfd1
 Rxf2 27. Nce3 Nf3 28. Rf1 Qxh3+ (28... Qxh3+ 29. gxh3 Rh2#) 0-1
-   ===================================================================== */
-const PGN = `
-1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7
-6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7
 `;
 /* ===================================================================== */
 
 /* =====================================================================
-   MOTEUR D'ÉCHECS
+   MOTEUR
    ===================================================================== */
 var KNIGHT = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
 var BISHOP = [[-1,-1],[-1,1],[1,-1],[1,1]];
@@ -659,6 +647,26 @@ function makeMove(st, m) {
   return undo;
 }
 
+function unmakeMove(st, undo) {
+  var b = st.board, m = undo.m;
+  var us = m.piece[0];
+
+  b[m.from] = m.promo ? us + 'P' : b[m.to];
+  b[m.to] = null;
+  if (undo.captured) b[undo.capturedSq] = undo.captured;
+
+  if (m.castle) {
+    b[undo.rookFrom] = b[undo.rookTo];
+    b[undo.rookTo] = null;
+  }
+
+  st.castling = undo.castling;
+  st.ep       = undo.ep;
+  st.halfmove = undo.halfmove;
+  st.fullmove = undo.fullmove;
+  st.turn     = us;
+}
+
 function legalMoves(st) {
   var us = st.turn, them = us === 'w' ? 'b' : 'w';
   var pseudo = genPseudo(st);
@@ -670,23 +678,13 @@ function legalMoves(st) {
     var u = makeMove(st, m);
     var k = m.piece[1] === 'K' ? m.to : ksq;
     if (k >= 0 && !attacked(st.board, k >> 3, k & 7, them)) out.push(m);
-    // unmake
-    var b = st.board, us2 = m.piece[0];
-    b[m.from] = m.promo ? us2 + 'P' : b[m.to];
-    b[m.to] = null;
-    if (u.captured) b[u.capturedSq] = u.captured;
-    if (m.castle) { b[u.rookFrom] = b[u.rookTo]; b[u.rookTo] = null; }
-    st.castling = u.castling;
-    st.ep       = u.ep;
-    st.halfmove = u.halfmove;
-    st.fullmove = u.fullmove;
-    st.turn     = us2;
+    unmakeMove(st, u);
   }
   return out;
 }
 
 /* =====================================================================
-   PGN PARSER & SAN RESOLVER
+   PGN PARSER
    ===================================================================== */
 function parsePGN(pgn) {
   var clean = pgn.replace(/\{[^}]*\}/g, ' ')
@@ -780,16 +778,16 @@ var hintEl       = document.getElementById('hint');
 var landingEl    = document.getElementById('landing');
 var gameEl       = document.getElementById('game');
 var hudEl        = document.getElementById('hud');
-var startBtn     = document.getElementById('startBtn');
 var boardEl      = document.getElementById('board');
 
 var GLYPH = { K: '\u265A', Q: '\u265B', R: '\u265C',
               B: '\u265D', N: '\u265E', P: '\u265F' };
 
 var state, occupants, lastMove, moveList = [], moveIndex = 0;
-var phase = 'landing';  // 'landing' | 'preview' | 'playing' | 'finished'
+var phase = 'landing';  // 'landing' | 'transitioning' | 'preview' | 'playing' | 'finished'
 var busy = false;
 var overAt = 0;
+var lastInputTime = 0;
 
 /* --- build squares + coordinates --- */
 (function buildSquares() {
@@ -905,7 +903,7 @@ function updateHUD() {
     dotEl.style.display = 'none';
     statusTextEl.textContent = 'Position finale';
     counterEl.textContent = 'Coup ' + total + ' / ' + total;
-    hintEl.textContent = 'Cliquez pour commencer';
+    hintEl.textContent = 'Cliquez ou appuyez sur une touche';
     return;
   }
 
@@ -917,22 +915,23 @@ function updateHUD() {
     return;
   }
 
-  // playing
-  var check = inCheck(state, state.turn);
-  dotEl.style.display = '';
-  dotEl.className = 'dot ' + state.turn;
+  if (phase === 'playing') {
+    var check = inCheck(state, state.turn);
+    dotEl.style.display = '';
+    dotEl.className = 'dot ' + state.turn;
 
-  statusTextEl.textContent = check
-    ? (state.turn === 'w' ? 'Blancs en échec' : 'Noirs en échec')
-    : (state.turn === 'w' ? 'Aux blancs' : 'Aux noirs');
+    statusTextEl.textContent = check
+      ? (state.turn === 'w' ? 'Blancs en échec' : 'Noirs en échec')
+      : (state.turn === 'w' ? 'Aux blancs' : 'Aux noirs');
 
-  var display = Math.min(moveIndex + 1, total);
-  counterEl.textContent = 'Coup ' + display + ' / ' + total;
+    var display = Math.min(moveIndex + 1, total);
+    counterEl.textContent = 'Coup ' + display + ' / ' + total;
 
-  if (moveIndex < total) {
-    hintEl.textContent = 'Suivant : ' + moveList[moveIndex];
-  } else {
-    hintEl.textContent = 'Cliquez pour rejouer';
+    if (moveIndex < total) {
+      hintEl.textContent = 'Suivant : ' + moveList[moveIndex];
+    } else {
+      hintEl.textContent = 'Cliquez pour rejouer';
+    }
   }
 }
 
@@ -945,7 +944,10 @@ function buildFinalState() {
   var last = null;
   for (var i = 0; i < moveList.length; i++) {
     var m = findMoveFromSAN(moveList[i], state);
-    if (!m) break;
+    if (!m) {
+      console.warn('Coup introuvable à l\'index', i, ':', moveList[i]);
+      break;
+    }
     makeMove(state, m);
     last = m;
   }
@@ -953,26 +955,24 @@ function buildFinalState() {
 }
 
 function enterPreview() {
-  // Prepare the final position silently
-  buildFinalState();
+  if (phase !== 'landing') return;
+  phase = 'transitioning';
 
-  // Fade out landing
+  buildFinalState();
   landingEl.classList.add('gone');
 
-  // Show game + HUD
   setTimeout(function () {
     landingEl.style.display = 'none';
     gameEl.style.display = 'flex';
     hudEl.style.display = '';
-    // trigger transition
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         gameEl.classList.add('visible');
       });
     });
     renderPieces();
-    render();
     phase = 'preview';
+    render();
   }, 550);
 }
 
@@ -980,16 +980,22 @@ function startPlaying() {
   state = initialState();
   lastMove = null;
   moveIndex = 0;
-  busy = false;
   phase = 'playing';
+  busy = true;
+
   renderPieces();
   render();
-  // Small delay to let the pieces settle, then play move 1
-  setTimeout(playNext, 120);
+
+  setTimeout(function () {
+    busy = false;
+    playNext();
+  }, 150);
 }
 
 function playNext() {
-  if (busy || phase !== 'playing') return;
+  if (busy) return;
+  if (phase !== 'playing') return;
+
   if (moveIndex >= moveList.length) {
     phase = 'finished';
     overAt = Date.now();
@@ -1003,6 +1009,7 @@ function playNext() {
   if (!m) {
     console.warn('Coup introuvable :', san);
     phase = 'finished';
+    overAt = Date.now();
     render();
     return;
   }
@@ -1021,10 +1028,15 @@ function playNext() {
    ENTRÉES
    ===================================================================== */
 
-function interact() {
+function handleInput() {
   if (busy) return;
 
-  if (phase === 'landing') return;   // handled by button
+  if (phase === 'transitioning') return;
+
+  if (phase === 'landing') {
+    enterPreview();
+    return;
+  }
 
   if (phase === 'preview') {
     startPlaying();
@@ -1043,9 +1055,16 @@ function interact() {
   }
 }
 
-window.addEventListener('pointerdown', function (e) {
+function debouncedInput() {
+  var now = Date.now();
+  if (now - lastInputTime < 180) return;
+  lastInputTime = now;
+  handleInput();
+}
+
+document.addEventListener('pointerdown', function (e) {
   e.preventDefault();
-  interact();
+  debouncedInput();
 }, { passive: false });
 
 window.addEventListener('keydown', function (e) {
@@ -1058,20 +1077,11 @@ window.addEventListener('keydown', function (e) {
       e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     e.preventDefault();
   }
-  interact();
+
+  debouncedInput();
 }, { passive: false });
 
 window.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-
-/* --- Start button --- */
-startBtn.addEventListener('pointerdown', function (e) {
-  e.preventDefault();
-  e.stopPropagation();
-  if (phase === 'landing') {
-    phase = 'preview';   // avoid double-firing
-    enterPreview();
-  }
-});
 
 /* --- Init --- */
 moveList = parsePGN(PGN);

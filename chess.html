@@ -3,22 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#071828">
+<meta name="theme-color" content="#04101e">
 <title>Mon dernier chef-d'œuvre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sq-light: #e9f1f7;
-    --sq-dark:  #add0f0;
-    --hl:       rgba(185, 214, 232, 0.65);
-    --check:    rgba(255, 100, 100, 0.55);
+    /* Les trois bleus de référence */
+    --blue-1: rgb(173, 208, 240);  /* le plus soutenu  */
+    --blue-2: rgb(185, 214, 232);  /* intermédiaire    */
+    --blue-3: rgb(233, 241, 247);  /* presque blanc    */
+
+    /* Échiquier */
+    --sq-light: var(--blue-3);
+    --sq-dark:  var(--blue-1);
+
+    /* Surlignages */
+    --hl:    rgba(185, 214, 232, 0.55);
+    --check: rgba(255, 100, 100, 0.55);
+
+    /* Texte */
     --text-bright: rgba(233, 241, 247, 0.98);
     --text-dim:    rgba(185, 214, 232, 0.75);
-    --blue-deep:   rgba(173, 208, 240, 1);
-    --blue-light:  rgba(233, 241, 247, 1);
-    --bg-deepest:  #030b15;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,6 +33,7 @@
   html, body {
     height: 100%;
     overflow: hidden;
+    background: #020a15;
     color: var(--text-bright);
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     user-select: none;
@@ -34,43 +42,40 @@
     touch-action: manipulation;
   }
 
-  /* ---------- Fixed background (sits above body bg, below content) ---------- */
+  /* ========== Fond sous-marin ========== */
   #bg {
     position: fixed;
-    inset: -10%;
+    inset: 0;
     z-index: 0;
     pointer-events: none;
     background:
-      radial-gradient(circle 60vmax at 20% 15%, rgba(173, 208, 240, 0.22) 0%, transparent 55%),
-      radial-gradient(circle 70vmax at 80% 85%, rgba(185, 214, 232, 0.15) 0%, transparent 60%),
-      radial-gradient(circle 40vmax at 55% 45%, rgba(233, 241, 247, 0.08) 0%, transparent 70%),
-      linear-gradient(180deg, #0d2440 0%, #071828 45%, #030b15 100%);
-    animation: drift 30s ease-in-out infinite alternate;
+      /* faisceau de lumière tombant du haut */
+      radial-gradient(ellipse 90% 55% at 50% -15%,
+        rgba(185, 214, 232, 0.30) 0%,
+        rgba(185, 214, 232, 0.10) 35%,
+        transparent 70%),
+      /* nappe bleue en bas à gauche */
+      radial-gradient(circle 55vmax at 15% 95%,
+        rgba(173, 208, 240, 0.22) 0%,
+        transparent 65%),
+      /* nappe bleue en bas à droite */
+      radial-gradient(circle 55vmax at 88% 88%,
+        rgba(173, 208, 240, 0.18) 0%,
+        transparent 65%),
+      /* dégradé vertical profond */
+      linear-gradient(180deg,
+        #0c2340 0%,
+        #071a30 35%,
+        #04101e 70%,
+        #020a15 100%);
+    animation: drift 40s ease-in-out infinite alternate;
   }
   @keyframes drift {
     0%   { transform: translate3d(0, 0, 0) scale(1); }
-    100% { transform: translate3d(-2%, -1%, 0) scale(1.05); }
+    100% { transform: translate3d(-1.5%, -1%, 0) scale(1.03); }
   }
 
-  #bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 12% 22%, rgba(233, 241, 247, 0.55) 0%, transparent 100%),
-      radial-gradient(1px 1px    at 78% 14%, rgba(233, 241, 247, 0.35) 0%, transparent 100%),
-      radial-gradient(2px 2px    at 34% 78%, rgba(233, 241, 247, 0.30) 0%, transparent 100%),
-      radial-gradient(1px 1px    at 62% 52%, rgba(233, 241, 247, 0.45) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 88% 68%, rgba(233, 241, 247, 0.35) 0%, transparent 100%),
-      radial-gradient(1px 1px    at 22% 58%, rgba(233, 241, 247, 0.30) 0%, transparent 100%);
-    animation: float 18s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0);     opacity: 0.75; }
-    50%      { transform: translateY(-14px); opacity: 1;    }
-  }
-
-  /* ---------- Landing ---------- */
+  /* ========== Page d'accueil ========== */
   #landing {
     position: fixed;
     inset: 0;
@@ -86,7 +91,6 @@
     transform: scale(1.06);
     pointer-events: none;
   }
-
   .landing-inner {
     max-width: 1100px;
     width: 100%;
@@ -105,8 +109,8 @@
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: clamp(3.5rem, 9vmin, 7rem);
     line-height: 0.5;
-    color: var(--blue-deep);
-    opacity: 0.45;
+    color: var(--blue-1);
+    opacity: 0.55;
   }
 
   blockquote {
@@ -118,7 +122,9 @@
     line-height: 1.28;
     color: var(--text-bright);
     text-wrap: balance;
-    text-shadow: 0 2px 30px rgba(173, 208, 240, 0.35);
+    text-shadow:
+      0 2px 30px rgba(173, 208, 240, 0.45),
+      0 0 60px rgba(185, 214, 232, 0.25);
   }
 
   .attribution {
@@ -142,7 +148,7 @@
     font-style: italic;
     font-weight: 500;
     line-height: 1;
-    color: var(--blue-deep);
+    color: var(--blue-1);
     cursor: pointer;
     transition: color 0.4s ease, transform 0.4s ease;
   }
@@ -157,10 +163,10 @@
     transition: transform 0.6s cubic-bezier(.2, .7, .3, 1);
     opacity: 0.7;
   }
-  #startBtn:hover { color: var(--blue-light); transform: translateY(-2px); }
+  #startBtn:hover { color: var(--blue-3); transform: translateY(-2px); }
   #startBtn:hover::after { transform: scaleX(1); }
 
-  /* ---------- Game ---------- */
+  /* ========== Partie ========== */
   #game {
     position: fixed;
     inset: 0;
@@ -180,9 +186,9 @@
     height: min(100vw, 100vh);
     background: var(--sq-dark);
     box-shadow:
-      0 0 0 1px rgba(233, 241, 247, 0.08),
-      0 30px 100px rgba(0, 0, 0, 0.7),
-      0 0 120px rgba(173, 208, 240, 0.12);
+      0 0 0 1px rgba(233, 241, 247, 0.10),
+      0 30px 100px rgba(0, 0, 0, 0.75),
+      0 0 140px rgba(173, 208, 240, 0.22);
   }
 
   #squares {
@@ -194,7 +200,7 @@
   }
   .sq { position: relative; }
   .sq.light { background: var(--sq-light); }
-  .sq.dark  { background: var(--sq-dark); }
+  .sq.dark  { background: var(--sq-dark);  }
 
   .sq.hl::after, .sq.check::after {
     content: '';
@@ -205,7 +211,9 @@
   .sq.hl::after { background: var(--hl); }
   .sq.check::after {
     background: radial-gradient(circle at 50% 50%,
-      rgba(255, 90, 90, 0.95) 0%, rgba(255, 90, 90, 0.5) 45%, rgba(255, 90, 90, 0) 75%);
+      rgba(255, 90, 90, 0.95) 0%,
+      rgba(255, 90, 90, 0.50) 45%,
+      rgba(255, 90, 90, 0) 75%);
   }
 
   .coord {
@@ -214,11 +222,11 @@
     font-size: clamp(9px, 1.4vmin, 14px);
     font-weight: 600;
     pointer-events: none;
-    opacity: 0.55;
+    opacity: 0.65;
   }
   .coord.file { bottom: 2%; text-align: center; width: 12.5%; }
   .coord.rank { left: 1.2%; height: 12.5%; display: flex; align-items: center; }
-  .coord.on-light { color: #6a8eb5; }
+  .coord.on-light { color: #4a6f96; }
   .coord.on-dark  { color: #e9f1f7; }
 
   #pieces { position: absolute; inset: 0; pointer-events: none; }
@@ -251,7 +259,7 @@
   .piece.no-anim { transition: none !important; }
   .piece.gone    { opacity: 0; }
 
-  /* ---------- HUD ---------- */
+  /* ========== HUD ========== */
   #hud {
     position: fixed;
     inset: 0;
@@ -269,11 +277,11 @@
     display: inline-flex;
     align-items: center;
     gap: .55em;
-    background: rgba(7, 24, 40, 0.72);
+    background: rgba(4, 16, 30, 0.78);
     color: var(--text-bright);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(185, 214, 232, 0.18);
+    border: 1px solid rgba(185, 214, 232, 0.22);
     border-radius: 999px;
     padding: .5em 1.05em;
     font-size: clamp(.62rem, 1.55vmin, .9rem);
@@ -281,7 +289,7 @@
     letter-spacing: .08em;
     text-transform: uppercase;
     white-space: nowrap;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
   }
   #hint {
     opacity: 0.9;
@@ -299,7 +307,7 @@
   .dot.w { background: #f5faff; }
   .dot.b { background: #0b2038; box-shadow: 0 0 0 1px rgba(233, 241, 247, 0.55); }
 
-  /* ---------- Quit ---------- */
+  /* ========== Bouton quitter ========== */
   #quitBtn {
     position: fixed;
     top: clamp(.7rem, 1.8vmin, 1.3rem);
@@ -310,9 +318,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(185, 214, 232, 0.25);
+    border: 1px solid rgba(185, 214, 232, 0.30);
     border-radius: 50%;
-    background: rgba(7, 24, 40, 0.72);
+    background: rgba(4, 16, 30, 0.78);
     color: var(--text-bright);
     font-family: 'Inter', sans-serif;
     font-size: clamp(.9rem, 2vmin, 1.15rem);
@@ -328,8 +336,8 @@
   }
   #quitBtn.visible { opacity: 1; pointer-events: auto; }
   #quitBtn:hover {
-    background: rgba(7, 24, 40, 0.95);
-    border-color: rgba(185, 214, 232, 0.55);
+    background: rgba(4, 16, 30, 0.98);
+    border-color: rgba(185, 214, 232, 0.60);
     transform: scale(1.08);
   }
   #quitBtn:active { transform: scale(0.94); }
@@ -393,7 +401,7 @@
 28. Rf1 Qxh3+ 29. gxh3 Rh2
 `;
 
-  /* ===================== Constants ===================== */
+  /* ===================== Constantes ===================== */
   const FILES = 'abcdefgh';
   const GLYPH = { K: '♔', Q: '♕', R: '♖', B: '♗', N: '♘', P: '♙' };
   const KNIGHT_MOVES = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
@@ -402,7 +410,7 @@
   const BISHOP_DIRS  = [[-1,-1],[-1,1],[1,-1],[1,1]];
   const QUEEN_DIRS   = ROOK_DIRS.concat(BISHOP_DIRS);
 
-  /* ===================== State ===================== */
+  /* ===================== État ===================== */
   let board = new Array(64).fill(null);
   let turn = 'w';
   let castling = { K: true, Q: true, k: true, q: true };
@@ -435,6 +443,11 @@
   function colOf(i) { return i & 7; }
   function inside(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
 
+  /* Indice interne → indice dans la grille DOM (perspective Noirs) */
+  function displayIndex(internalIdx) {
+    return (7 - rowOf(internalIdx)) * 8 + (7 - colOf(internalIdx));
+  }
+
   function initialBoard() {
     const b = new Array(64).fill(null);
     const back = ['R','N','B','Q','K','B','N','R'];
@@ -456,12 +469,7 @@
     moveIndex = 0;
   }
 
-  /* ===================== Attacks ===================== */
-  /* A pawn of colour `by` attacks diagonally *forward*.
-     White pawn at (pr, pc) attacks (pr-1, pc-1) and (pr-1, pc+1).
-     So (r, c) is attacked by a white pawn iff a white pawn sits at (r+1, c±1).
-     Black pawn at (pr, pc) attacks (pr+1, pc-1) and (pr+1, pc+1).
-     So (r, c) is attacked by a black pawn iff a black pawn sits at (r-1, c±1). */
+  /* ===================== Attaques ===================== */
   function attacked(b, r, c, by) {
     const pawnR = by === 'w' ? r + 1 : r - 1;
     if (inside(pawnR, c - 1) && b[idx(pawnR, c - 1)] === by + 'P') return true;
@@ -512,7 +520,7 @@
     return attacked(board, rowOf(k), colOf(k), color === 'w' ? 'b' : 'w');
   }
 
-  /* ===================== Move generation ===================== */
+  /* ===================== Génération de coups ===================== */
   function pseudoMoves() {
     const us = turn, them = us === 'w' ? 'b' : 'w';
     const moves = [];
@@ -586,7 +594,6 @@
       }
     }
 
-    // Castling
     if (us === 'w') {
       if (castling.K && board[60] === 'wK' && board[63] === 'wR' && !board[61] && !board[62] &&
           !attacked(board, 7, 4, 'b') && !attacked(board, 7, 5, 'b') && !attacked(board, 7, 6, 'b')) {
@@ -777,9 +784,12 @@
     return null;
   }
 
-  /* ===================== Rendering ===================== */
+  /* ===================== Rendu ===================== */
+  /* Positionne une pièce : perspective Noirs → on inverse ligne et colonne */
   function setPiecePos(el, square) {
-    el.style.transform = `translate(${colOf(square) * 100}%, ${rowOf(square) * 100}%)`;
+    const dRow = 7 - rowOf(square);
+    const dCol = 7 - colOf(square);
+    el.style.transform = `translate(${dCol * 100}%, ${dRow * 100}%)`;
   }
 
   function buildSquares() {
@@ -792,20 +802,22 @@
     }
     squaresEl.appendChild(frag);
 
+    /* Fichiers en bas — perspective Noirs : h g f e d c b a */
     for (let c = 0; c < 8; c++) {
       const el = document.createElement('div');
       const isLight = (7 + c) % 2 === 0;
       el.className = 'coord file ' + (isLight ? 'on-light' : 'on-dark');
       el.style.left = (c * 12.5) + '%';
-      el.textContent = FILES[c];
+      el.textContent = FILES[7 - c];
       boardEl.appendChild(el);
     }
+    /* Rangées à gauche — perspective Noirs : 1 2 3 4 5 6 7 8 (de haut en bas) */
     for (let r = 0; r < 8; r++) {
       const el = document.createElement('div');
       const isLight = r % 2 === 0;
       el.className = 'coord rank ' + (isLight ? 'on-light' : 'on-dark');
       el.style.top = (r * 12.5) + '%';
-      el.textContent = String(8 - r);
+      el.textContent = String(r + 1);
       boardEl.appendChild(el);
     }
   }
@@ -873,12 +885,12 @@
       squaresEl.children[i].classList.remove('hl', 'check');
     }
     if (lastMove) {
-      squaresEl.children[lastMove.from].classList.add('hl');
-      squaresEl.children[lastMove.to].classList.add('hl');
+      squaresEl.children[displayIndex(lastMove.from)].classList.add('hl');
+      squaresEl.children[displayIndex(lastMove.to)].classList.add('hl');
     }
     if (inCheck(turn)) {
       const k = findKing(turn);
-      if (k >= 0) squaresEl.children[k].classList.add('check');
+      if (k >= 0) squaresEl.children[displayIndex(k)].classList.add('check');
     }
   }
 
@@ -913,7 +925,7 @@
     updateHUD();
   }
 
-  /* ===================== Game flow ===================== */
+  /* ===================== Déroulement ===================== */
   function buildFinalPosition() {
     resetState();
     let last = null;
@@ -957,7 +969,7 @@
     renderPieces();
     render();
     lastMoveTime = 0;
-    playNext();  // immediately play the first move
+    playNext();
   }
 
   function playNext() {
@@ -1020,7 +1032,7 @@
     if (phase === 'finished')       { startPlaying(); return; }
   }
 
-  /* ===================== Events ===================== */
+  /* ===================== Événements ===================== */
   document.addEventListener('click', (e) => {
     const t = e.target;
     if (t && t.closest) {

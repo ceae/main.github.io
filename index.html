@@ -58,6 +58,7 @@
     header {
       padding: 2rem 1.5rem;
       border-bottom: 1px solid var(--border);
+      text-align: center;
     }
 
     header h1 {
@@ -332,22 +333,20 @@
       border-top: 1px solid var(--border);
     }
 
-    /* Navigation externe */
         /* Navigation externe */
     .site-nav {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      margin: 1rem;
       padding: 1rem;
+      width: fit-content;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      z-index: 1000;
     }
+    
     .site-nav a {
       color: var(--accent);
       text-decoration: none;

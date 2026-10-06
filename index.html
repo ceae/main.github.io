@@ -331,6 +331,24 @@
       border-top: 1px solid var(--border);
     }
 
+    /* Navigation externe */
+    .site-nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+    .site-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .site-nav a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
       header { padding: 1.5rem 1rem; }
       header h1 { font-size: 1.4rem; }
@@ -341,27 +359,40 @@
       .filter-btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
     }
 
-    /* Accessibility */
+    /* Accessibilité */
     .skip-link {
       position: absolute;
-      top: 40px;
+      top: -100px;
       left: 0;
       background: var(--accent);
       color: white;
       padding: 8px;
       text-decoration: none;
       z-index: 100;
+      transition: top 0.2s;
     }
 
-    .skip-link:focus { top: 0; }
-    :focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    :focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
 
-<a href="https://ceae.github.io/main.github.io/substack.html" class="skip-link">Mes traductions</a>
+<a href="#main" class="skip-link">Aller au contenu principal</a>
 
-<main>
+<nav class="site-nav" aria-label="Liens externes">
+  <a href="https://ceae.github.io/main.github.io/substack.html">Mes traductions</a>
+  <a href="https://github.com/ceae">GitHub</a>
+  <a href="https://ceae.substack.com">Substack</a>
+</nav>
+
+<main id="main">
   <header>
     <h1>🗺️ Mon parcours linguistique</h1>
     <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
@@ -386,6 +417,7 @@
     <h2>Carte interactive</h2>
     <div class="map-controls">
       <button class="filter-btn active" data-filter="all">Tous les points</button>
+      <button class="filter-btn" data-filter="french">Français</button>
       <button class="filter-btn" data-filter="english">Anglais</button>
       <button class="filter-btn" data-filter="spanish">Espagnol</button>
       <button class="filter-btn" data-filter="italian">Italien</button>
@@ -408,7 +440,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
-    const experiences = [
+  const experiences = [
     {
       lat: 48.6236,
       lng: 2.4257,
@@ -417,7 +449,8 @@
       desc: "Licence LEA à Paris-Saclay",
       year: "2023-2026",
       level: "🇫🇷 Langue maternelle",
-      category: "english", "spanish", "chinese"
+      category: "native",
+      languages: ["french", "english", "spanish", "chinese"],
       duration: "3 ans",
       lang_studied: "Anglais C1, Espagnol C1, Chinois débutant"
     },
@@ -429,7 +462,8 @@
       desc: "Semestre Erasmus — immersion espagnole complète",
       year: "2024",
       level: "🇪🇸 Avancé",
-      category: "english", "spanish",
+      category: "advanced",
+      languages: ["english", "spanish"],
       duration: "1 semestre",
       lang_studied: "Anglais C1, Espagnol C1"
     },
@@ -440,8 +474,9 @@
       location: "Rhénanie-du-Nord-Westphalie",
       desc: "Semestre Erasmus — perfectionnement allemand",
       year: "2025",
-      level: "🇩🇪 B2",
-      category: "english", "spanish", "german", "turkish"
+      level: "🇩🇪 B2 (cours B1 sur place)",
+      category: "intermediate",
+      languages: ["english", "spanish", "german", "italian", "turkish"],
       duration: "1 semestre",
       lang_studied: "Anglais C1, Espagnol C1, Allemand B1, Italien débutant, Turc débutant"
     },
@@ -453,7 +488,8 @@
       desc: "Au pair",
       year: "2026",
       level: "C1 espagnol",
-      category: "english", "spanish"
+      category: "other",
+      languages: ["english", "spanish"],
       duration: "1 mois",
       lang_spoken: "Anglais avec les enfants dont je m'occupais, Espagnol avec les parents"
     },
@@ -465,7 +501,8 @@
       desc: "Au pair",
       year: "2026",
       level: "C1 anglais",
-      category: "english", "italian"
+      category: "other",
+      languages: ["english", "italian"],
       duration: "3 semaines",
       lang_spoken: "Anglais avec toute la famille mais ils parlaient toujours italien entre eux donc grande amélioration en compréhension orale"
     }
@@ -481,7 +518,12 @@
   }).addTo(map);
 
   function getMarkerColor(category) {
-    const colors = { native: '#2d8659', advanced: '#d4a574', intermediate: '#3d5a8f', other: '#999' };
+    const colors = {
+      native: '#2d8659',
+      advanced: '#d4a574',
+      intermediate: '#3d5a8f',
+      other: '#999'
+    };
     return colors[category] || '#b5533c';
   }
 
@@ -512,13 +554,18 @@
     `;
 
     marker.bindPopup(popupContent);
-    marker.dataset = { category: exp.category, index: idx };
+
+    // Stocke les langues et le niveau sur le marqueur
+    marker.languages = exp.languages;
+    marker.levelCategory = exp.category;
+    marker.index = idx;
+
     markers.push(marker);
   });
 
   function updateMarkers(filter) {
     markers.forEach(marker => {
-      const isVisible = filter === 'all' || marker.dataset.category === filter;
+      const isVisible = filter === 'all' || marker.languages.includes(filter);
       marker.setOpacity(isVisible ? 1 : 0.3);
       const element = marker.getElement();
       if (element) element.style.pointerEvents = isVisible ? 'auto' : 'none';

@@ -137,11 +137,11 @@
       transition: all 0.2s ease;
     }
 
-    .filter-btn:hover,
+        .filter-btn:hover,
     .filter-btn.active {
-      background: var(--accent);
+      background: var(--lang-color, var(--accent));
       color: white;
-      border-color: var(--accent);
+      border-color: var(--lang-color, var(--accent));
     }
 
     .timeline {
@@ -406,23 +406,17 @@
     </div>
   </header>
 
-  <!-- Légende des langues : remplie automatiquement par JS -->
-  <section>
-    <h2>Légende des langues</h2>
-    <div class="legend" id="language-legend"></div>
-  </section>
-
   <section>
     <h2>Carte interactive</h2>
-    <div class="map-controls">
+        <div class="map-controls">
       <button class="filter-btn active" data-filter="all">Tous les points</button>
-      <button class="filter-btn" data-filter="french">Français</button>
-      <button class="filter-btn" data-filter="english">Anglais</button>
-      <button class="filter-btn" data-filter="spanish">Espagnol</button>
-      <button class="filter-btn" data-filter="italian">Italien</button>
-      <button class="filter-btn" data-filter="german">Allemand</button>
-      <button class="filter-btn" data-filter="chinese">Chinois</button>
-      <button class="filter-btn" data-filter="turkish">Turc</button>
+      <button class="filter-btn" data-filter="french"  style="--lang-color: #dc2626;">Français</button>
+      <button class="filter-btn" data-filter="english" style="--lang-color: #3b82f6;">Anglais</button>
+      <button class="filter-btn" data-filter="spanish" style="--lang-color: #f59e0b;">Espagnol</button>
+      <button class="filter-btn" data-filter="italian" style="--lang-color: #15803d;">Italien</button>
+      <button class="filter-btn" data-filter="german"  style="--lang-color: #8b5cf6;">Allemand</button>
+      <button class="filter-btn" data-filter="chinese" style="--lang-color: #ec4899;">Chinois</button>
+      <button class="filter-btn" data-filter="turkish" style="--lang-color: #92400e;">Turc</button>
     </div>
     <div id="map" role="region" aria-label="Carte interactive du parcours linguistique"></div>
   </section>
@@ -442,24 +436,14 @@
   // ============================================================
   // 1. COULEURS DES LANGUES
   // ============================================================
-  const languageColors = {
-    french:  '#3b82f6', // bleu
-    english: '#ef4444', // rouge
+    const languageColors = {
+    french:  '#dc2626', // rouge
+    english: '#3b82f6', // bleu
     spanish: '#f59e0b', // orange
-    italian: '#22c55e', // vert
+    italian: '#15803d', // vert foncé
     german:  '#8b5cf6', // violet
     chinese: '#ec4899', // rose
-    turkish: '#14b8a6'  // turquoise
-  };
-
-  const languageNames = {
-    french:  'Français',
-    english: 'Anglais',
-    spanish: 'Espagnol',
-    italian: 'Italien',
-    german:  'Allemand',
-    chinese: 'Chinois',
-    turkish: 'Turc'
+    turkish: '#92400e'  // marron
   };
 
   // ============================================================
@@ -644,19 +628,6 @@
     timeline.appendChild(item);
   });
 
-  // ============================================================
-  // 8. LÉGENDE DES LANGUES (générée automatiquement)
-  // ============================================================
-  const legendContainer = document.getElementById('language-legend');
-  Object.entries(languageColors).forEach(([code, color]) => {
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `
-      <div class="legend-color" style="background: ${color};"></div>
-      <span>${languageNames[code]}</span>
-    `;
-    legendContainer.appendChild(item);
-  });
 </script>
 
 </body>

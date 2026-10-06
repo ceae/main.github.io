@@ -236,8 +236,9 @@
     .legend-color {
       width: 20px;
       height: 20px;
-      border-radius: 4px;
+      border-radius: 50%;
       flex-shrink: 0;
+      border: 2px solid var(--border);
     }
 
     /* Marqueurs Leaflet en forme d'épingle */
@@ -249,7 +250,6 @@
     .custom-marker {
       width: 34px;
       height: 34px;
-      background: var(--marker-color);
       border: 3px solid white;
       border-radius: 50% 50% 50% 0;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
@@ -261,11 +261,12 @@
     }
 
     .custom-marker span {
-      width: 10px;
-      height: 10px;
+      width: 6px;
+      height: 6px;
       background: white;
       border-radius: 50%;
       transform: rotate(45deg);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
     }
 
     .leaflet-marker-icon:hover .custom-marker {
@@ -384,8 +385,10 @@
 </head>
 <body>
 
+<!-- Lien d'évitement accessible : caché, apparaît avec Tab -->
 <a href="#main" class="skip-link">Aller au contenu principal</a>
 
+<!-- Barre de navigation vers les autres sites -->
 <nav class="site-nav" aria-label="Liens externes">
   <a href="https://ceae.github.io/main.github.io/substack.html">Mes traductions</a>
   <a href="https://github.com/ceae">GitHub</a>
@@ -403,14 +406,10 @@
     </div>
   </header>
 
+  <!-- Légende des langues : remplie automatiquement par JS -->
   <section>
-    <h2>Légende des niveaux</h2>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-color" style="background: var(--success);"></div><span>Langue maternelle</span></div>
-      <div class="legend-item"><div class="legend-color" style="background: var(--warning);"></div><span>Niveau avancé</span></div>
-      <div class="legend-item"><div class="legend-color" style="background: var(--info);"></div><span>Niveau intermédiaire (B1-B2)</span></div>
-      <div class="legend-item"><div class="legend-color" style="background: #999;"></div><span>Autres (traduction, contributions)</span></div>
-    </div>
+    <h2>Légende des langues</h2>
+    <div class="legend" id="language-legend"></div>
   </section>
 
   <section>
@@ -440,6 +439,32 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
+  // ============================================================
+  // 1. COULEURS DES LANGUES
+  // ============================================================
+  const languageColors = {
+    french:  '#3b82f6', // bleu
+    english: '#ef4444', // rouge
+    spanish: '#f59e0b', // orange
+    italian: '#22c55e', // vert
+    german:  '#8b5cf6', // violet
+    chinese: '#ec4899', // rose
+    turkish: '#14b8a6'  // turquoise
+  };
+
+  const languageNames = {
+    french:  'Français',
+    english: 'Anglais',
+    spanish: 'Espagnol',
+    italian: 'Italien',
+    german:  'Allemand',
+    chinese: 'Chinois',
+    turkish: 'Turc'
+  };
+
+  // ============================================================
+  // 2. DONNÉES
+  // ============================================================
   const experiences = [
     {
       lat: 48.6236,
@@ -508,6 +533,9 @@
     }
   ];
 
+  // ============================================================
+  // 3. INITIALISATION DE LA CARTE
+  // ============================================================
   let currentFilter = 'all';
   const markers = [];
   const map = L.map('map').setView([46.6, 2.5], 4);
@@ -517,20 +545,25 @@
     maxZoom: 18,
   }).addTo(map);
 
-  function getMarkerColor(category) {
-    const colors = {
-      native: '#2d8659',
-      advanced: '#d4a574',
-      intermediate: '#3d5a8f',
-      other: '#999'
-    };
-    return colors[category] || '#b5533c';
+  // ============================================================
+  // 4. FONCTIONS POUR LES MARQUEURS MULTICOLORES
+  // ============================================================
+
+  // Construit un dégradé conique : une part égale par langue
+  function buildLanguageGradient(languages) {
+    const step = 360 / languages.length;
+    const stops = languages.map((lang, i) => {
+      const color = languageColors[lang] || '#999';
+      return `${color} ${i * step}deg ${(i + 1) * step}deg`;
+    });
+    return `conic-gradient(${stops.join(', ')})`;
   }
 
-  // Crée une icône Leaflet en forme d'épingle, colorée selon la catégorie.
-  function createColoredMarker(color) {
+  // Crée une icône Leaflet en forme d'épingle, colorée par langue
+  function createLanguageMarker(languages) {
+    const gradient = buildLanguageGradient(languages);
     return L.divIcon({
-      html: `<div class="custom-marker" style="--marker-color: ${color};"><span></span></div>`,
+      html: `<div class="custom-marker" style="background: ${gradient};"><span></span></div>`,
       iconSize: [34, 34],
       iconAnchor: [17, 34],
       popupAnchor: [0, -34],
@@ -538,9 +571,12 @@
     });
   }
 
+  // ============================================================
+  // 5. CRÉATION DES MARQUEURS
+  // ============================================================
   experiences.forEach((exp, idx) => {
     const marker = L.marker([exp.lat, exp.lng], {
-      icon: createColoredMarker(getMarkerColor(exp.category))
+      icon: createLanguageMarker(exp.languages)
     }).addTo(map);
 
     const popupContent = `
@@ -555,7 +591,7 @@
 
     marker.bindPopup(popupContent);
 
-    // Stocke les langues et le niveau sur le marqueur
+    // Infos stockées sur le marqueur pour le filtrage
     marker.languages = exp.languages;
     marker.levelCategory = exp.category;
     marker.index = idx;
@@ -563,10 +599,13 @@
     markers.push(marker);
   });
 
+  // ============================================================
+  // 6. FILTRAGE PAR LANGUE
+  // ============================================================
   function updateMarkers(filter) {
     markers.forEach(marker => {
       const isVisible = filter === 'all' || marker.languages.includes(filter);
-      marker.setOpacity(isVisible ? 1 : 0.3);
+      marker.setOpacity(isVisible ? 1 : 0.2);
       const element = marker.getElement();
       if (element) element.style.pointerEvents = isVisible ? 'auto' : 'none';
     });
@@ -582,6 +621,9 @@
     });
   });
 
+  // ============================================================
+  // 7. CHRONOLOGIE
+  // ============================================================
   const timeline = document.getElementById('timeline');
   experiences.forEach(exp => {
     const item = document.createElement('div');
@@ -600,6 +642,20 @@
       <span class="timeline-level ${exp.category}">${exp.level}</span>
     `;
     timeline.appendChild(item);
+  });
+
+  // ============================================================
+  // 8. LÉGENDE DES LANGUES (générée automatiquement)
+  // ============================================================
+  const legendContainer = document.getElementById('language-legend');
+  Object.entries(languageColors).forEach(([code, color]) => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `
+      <div class="legend-color" style="background: ${color};"></div>
+      <span>${languageNames[code]}</span>
+    `;
+    legendContainer.appendChild(item);
   });
 </script>
 

@@ -333,13 +333,20 @@
     }
 
     /* Navigation externe */
+        /* Navigation externe */
     .site-nav {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem;
       background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
     }
     .site-nav a {
       color: var(--accent);

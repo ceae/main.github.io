@@ -138,7 +138,7 @@
       transition: all 0.2s ease;
     }
 
-        .filter-btn:hover,
+    .filter-btn:hover,
     .filter-btn.active {
       background: var(--lang-color, var(--accent));
       color: white;
@@ -166,11 +166,6 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-
-    .timeline-item.native { border-left-color: var(--success); }
-    .timeline-item.advanced { border-left-color: var(--warning); }
-    .timeline-item.intermediate { border-left-color: var(--info); }
-    .timeline-item.other { border-left-color: #999; }
 
     .timeline-year {
       display: inline-block;
@@ -210,11 +205,6 @@
       padding: 4px 10px;
       border-radius: 4px;
     }
-
-    .timeline-level.native { background: var(--success); }
-    .timeline-level.advanced { background: var(--warning); color: #000; }
-    .timeline-level.intermediate { background: var(--info); }
-    .timeline-level.other { background: #666; }
 
     .legend {
       display: grid;
@@ -333,7 +323,7 @@
       border-top: 1px solid var(--border);
     }
 
-        /* Navigation externe */
+    /* Navigation externe */
     .site-nav {
       display: flex;
       flex-direction: column;
@@ -407,22 +397,24 @@
     <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
     
     <div class="stats">
-      <div class="stat-item"><div class="stat-value">5</div><div class="stat-label">Destinations</div></div>
-      <div class="stat-item"><div class="stat-value">7</div><div class="stat-label">Langues</div></div>
+      <div class="stat-item"><div class="stat-value">6</div><div class="stat-label">Destinations</div></div>
+      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Langues</div></div>
     </div>
   </header>
 
   <section>
     <h2>Carte interactive</h2>
-        <div class="map-controls">
+    <div class="map-controls">
       <button class="filter-btn active" data-filter="all">Tous les points</button>
-      <button class="filter-btn" data-filter="french"  style="--lang-color: #f59e0b;">Français</button>
+      <button class="filter-btn" data-filter="french" style="--lang-color: #f59e0b;">Français</button>
       <button class="filter-btn" data-filter="english" style="--lang-color: #3b82f6;">Anglais</button>
       <button class="filter-btn" data-filter="spanish" style="--lang-color: #dc2626;">Espagnol</button>
       <button class="filter-btn" data-filter="italian" style="--lang-color: #15803d;">Italien</button>
-      <button class="filter-btn" data-filter="german"  style="--lang-color: #8b5cf6;">Allemand</button>
+      <button class="filter-btn" data-filter="german" style="--lang-color: #8b5cf6;">Allemand</button>
       <button class="filter-btn" data-filter="chinese" style="--lang-color: #ec4899;">Chinois</button>
       <button class="filter-btn" data-filter="turkish" style="--lang-color: #92400e;">Turc</button>
+      <button class="filter-btn" data-filter="greek" style="--lang-color: #0891b2;">Grec</button>
+      <button class="filter-btn" data-filter="russian" style="--lang-color: #be123c;">Russe</button>
     </div>
     <div id="map" role="region" aria-label="Carte interactive du parcours linguistique"></div>
   </section>
@@ -442,14 +434,16 @@
   // ============================================================
   // 1. COULEURS DES LANGUES
   // ============================================================
-    const languageColors = {
+  const languageColors = {
     french:  '#f59e0b', // orange
     english: '#3b82f6', // bleu
     spanish: '#dc2626', // rouge
     italian: '#15803d', // vert foncé
     german:  '#8b5cf6', // violet
     chinese: '#ec4899', // rose
-    turkish: '#92400e'  // marron
+    turkish: '#92400e', // marron
+    greek:   '#0891b2', // bleu canard
+    russian: '#be123c'  // rouge foncé
   };
 
   // ============================================================
@@ -464,7 +458,6 @@
       desc: "Licence LEA à Paris-Saclay",
       year: "2023-2026",
       level: "🇫🇷 Langue maternelle",
-      category: "native",
       languages: ["french", "english", "spanish", "chinese"],
       duration: "3 ans",
       lang_studied: "Anglais C1, Espagnol C1, Chinois débutant"
@@ -477,7 +470,6 @@
       desc: "Semestre Erasmus — immersion espagnole complète",
       year: "2024",
       level: "🇪🇸 Avancé",
-      category: "advanced",
       languages: ["english", "spanish"],
       duration: "1 semestre",
       lang_studied: "Anglais C1, Espagnol C1"
@@ -490,7 +482,6 @@
       desc: "Semestre Erasmus — perfectionnement allemand",
       year: "2025",
       level: "🇩🇪 B2 (cours B1 sur place)",
-      category: "intermediate",
       languages: ["english", "spanish", "german", "italian", "turkish"],
       duration: "1 semestre",
       lang_studied: "Anglais C1, Espagnol C1, Allemand B1, Italien débutant, Turc débutant"
@@ -503,7 +494,6 @@
       desc: "Au pair",
       year: "2026",
       level: "C1 espagnol",
-      category: "other",
       languages: ["english", "spanish"],
       duration: "1 mois",
       lang_spoken: "Anglais avec les enfants dont je m'occupais, Espagnol avec les parents"
@@ -516,10 +506,20 @@
       desc: "Au pair",
       year: "2026",
       level: "C1 anglais",
-      category: "other",
       languages: ["english", "italian"],
       duration: "3 semaines",
       lang_spoken: "Anglais avec toute la famille mais ils parlaient toujours italien entre eux donc grande amélioration en compréhension orale"
+    },
+    {
+      lat: 40.977858,
+      lng: -5.678768,
+      title: "Salamanca, Espagne",
+      location: "Castilla y León",
+      desc: "Voluntariado Europeo",
+      year: "2026-2027",
+      languages: ["spanish", "italian", "greek", "russian"],
+      duration: "9 mois",
+      lang_spoken: "Espagnol au quotidien. J'ai aussi profité d'avoir des colocataires de toute l'Europe pour apprendre l'italien, un peu de grec et de russe."
     }
   ];
 
@@ -564,7 +564,7 @@
   // ============================================================
   // 5. CRÉATION DES MARQUEURS
   // ============================================================
-  experiences.forEach((exp, idx) => {
+  experiences.forEach(exp => {
     const marker = L.marker([exp.lat, exp.lng], {
       icon: createLanguageMarker(exp.languages)
     }).addTo(map);
@@ -574,7 +574,7 @@
       <div class="popup-location">${exp.location}</div>
       <div class="popup-description">${exp.desc}</div>
       <div class="popup-meta">
-        <span class="popup-level">${exp.level}</span>
+        ${exp.level ? `<span class="popup-level">${exp.level}</span>` : ''}
         <span class="popup-year">${exp.year}</span>
       </div>
     `;
@@ -583,8 +583,6 @@
 
     // Infos stockées sur le marqueur pour le filtrage
     marker.languages = exp.languages;
-    marker.levelCategory = exp.category;
-    marker.index = idx;
 
     markers.push(marker);
   });
@@ -617,7 +615,7 @@
   const timeline = document.getElementById('timeline');
   experiences.forEach(exp => {
     const item = document.createElement('div');
-    item.className = `timeline-item ${exp.category}`;
+    item.className = 'timeline-item';
     const languageInfo = exp.lang_studied
       ? `<strong>Langues étudiées:</strong> ${exp.lang_studied}`
       : `<strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken}`;
@@ -627,9 +625,9 @@
       <div class="timeline-location">📍 ${exp.location}</div>
       <div class="timeline-description">${exp.desc}</div>
       <div style="font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.5rem;">
-        <strong>Durée:</strong> ${exp.duration} • ${languageInfo} 
+        <strong>Durée:</strong> ${exp.duration} • ${languageInfo}
       </div>
-      <span class="timeline-level ${exp.category}">${exp.level}</span>
+      ${exp.level ? `<span class="timeline-level">${exp.level}</span>` : ''}
     `;
     timeline.appendChild(item);
   });

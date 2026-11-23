@@ -4,44 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon parcours linguistique</title>
-  <meta name="description" content="Explorez mon parcours linguistique à travers une carte interactive">
+  <meta id="metaDesc" name="description" content="Explorez mon parcours linguistique à travers une carte interactive">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
   <style>
+    /* Palette alignée sur les pages Chess et Mes traductions : bleus doux, fond clair/froid */
     :root {
-      --bg: #faf8f5;
-      --text: #2b2b2b;
-      --accent: #b5533c;
+      --bg: #f4f7fa;
+      --text: #1f2933;
+      --accent: #22405a;
+      --on-accent: #ffffff;
       --card-bg: #ffffff;
-      --border: #e8e6e1;
-      --success: #2d8659;
-      --warning: #d4a574;
-      --info: #3d5a8f;
+      --border: #d5e0ea;
     }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #1c1b1a;
-        --text: #ececec;
-        --accent: #e08a6f;
-        --card-bg: #2a2827;
-        --border: #3a3835;
-        --success: #5dd18f;
-        --warning: #e8c397;
-        --info: #7a9dd4;
+        --bg: #0c1a2b;
+        --text: #e9f1f7;
+        --accent: #adD0f0;
+        --on-accent: #04101e;
+        --card-bg: #12263d;
+        --border: #24405c;
       }
     }
     :root[data-theme="dark"] {
-      --bg: #1c1b1a;
-      --text: #ececec;
-      --accent: #e08a6f;
-      --card-bg: #2a2827;
-      --border: #3a3835;
-      --success: #5dd18f;
-      --warning: #e8c397;
-      --info: #7a9dd4;
+      --bg: #0c1a2b;
+      --text: #e9f1f7;
+      --accent: #adD0f0;
+      --on-accent: #04101e;
+      --card-bg: #12263d;
+      --border: #24405c;
     }
 
     * { box-sizing: border-box; }
-    
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -55,15 +50,66 @@
       margin: 0 auto;
     }
 
-    header {
-      padding: 2rem 1.5rem;
+    /* ===== Barre du haut : liens + sélecteur de langue ===== */
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      padding: 0.6rem 1.5rem;
+      background: var(--card-bg);
       border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+
+    .nav-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.92rem;
+    }
+    .nav-links a:hover { text-decoration: underline; }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .lang-btn + .lang-btn { border-left: 1px solid var(--border); }
+    .lang-btn:hover { background: var(--bg); }
+    .lang-btn[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    /* ===== En-tête compact ===== */
+    header {
+      padding: 1.25rem 1.5rem 0.5rem;
       text-align: center;
     }
 
     header h1 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.8rem;
+      margin: 0 0 0.25rem 0;
+      font-size: 1.7rem;
       color: var(--accent);
     }
 
@@ -74,36 +120,37 @@
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.9rem;
     }
 
     .stat-item {
-      padding: 1rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
       background: var(--card-bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 4px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
     }
 
     .stat-value {
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       color: var(--accent);
     }
 
     .stat-label {
       opacity: 0.75;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    section {
-      padding: 1.5rem;
-    }
+    section { padding: 1.25rem 1.5rem; }
 
     section h2 {
       margin-top: 0;
@@ -115,6 +162,7 @@
       width: 100%;
       height: 60vh;
       min-height: 400px;
+      border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 1rem;
@@ -128,7 +176,7 @@
     }
 
     .filter-btn {
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 0.95rem;
       border: 1px solid var(--border);
       background: var(--card-bg);
       color: var(--text);
@@ -145,20 +193,20 @@
       border-color: var(--lang-color, var(--accent));
     }
 
+    /* ===== Chronologie ===== */
     .timeline {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      padding-top: 1rem;
+      gap: 1.25rem;
+      padding-top: 0.5rem;
     }
 
     .timeline-item {
-      padding: 1.5rem;
+      display: flex;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      border-left: 4px solid var(--accent);
-      position: relative;
+      overflow: hidden;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -167,14 +215,26 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+    /* Bande aux couleurs du drapeau, à gauche de la description */
+    .flag {
+      flex: 0 0 22px;
+      border-right: 1px solid var(--border);
+    }
+
+    .timeline-body {
+      flex: 1;
+      min-width: 0;
+      padding: 1.25rem 1.4rem;
+    }
+
     .timeline-year {
       display: inline-block;
       font-size: 0.75rem;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       padding: 3px 10px;
       border-radius: 999px;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.7rem;
       font-weight: 600;
     }
 
@@ -182,7 +242,7 @@
       font-weight: 600;
       font-size: 1.1rem;
       color: var(--text);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .timeline-location {
@@ -197,42 +257,22 @@
       margin-bottom: 0.8rem;
     }
 
+    .timeline-meta {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 0.6rem;
+    }
+
     .timeline-level {
       display: inline-block;
       font-size: 0.8rem;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       padding: 4px 10px;
       border-radius: 4px;
     }
 
-    .legend {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      padding: 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      font-size: 0.9rem;
-    }
-
-    .legend-color {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      border: 2px solid var(--border);
-    }
-
-    /* Marqueurs Leaflet en forme d'épingle */
+    /* ===== Marqueurs Leaflet en forme d'épingle ===== */
     .leaflet-div-icon.custom-marker-icon {
       background: transparent;
       border: 0;
@@ -297,6 +337,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.5rem;
       margin-top: 8px;
       font-size: 0.8rem;
       padding-top: 8px;
@@ -307,7 +348,7 @@
       display: inline-block;
       font-size: 0.75rem;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       padding: 3px 8px;
       border-radius: 4px;
       font-weight: 600;
@@ -316,44 +357,23 @@
     .popup-year { opacity: 0.75; }
 
     footer {
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
       text-align: center;
       opacity: 0.7;
       font-size: 0.85rem;
       border-top: 1px solid var(--border);
     }
 
-    /* Navigation externe */
-    .site-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin: 1rem;
-      padding: 1rem;
-      width: fit-content;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .site-nav a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .site-nav a:hover {
-      text-decoration: underline;
-    }
+    footer p { margin: 0; }
 
     @media (max-width: 768px) {
-      header { padding: 1.5rem 1rem; }
+      .site-nav { padding: 0.6rem 1rem; }
+      header { padding: 1rem 1rem 0.25rem; }
       header h1 { font-size: 1.4rem; }
+      section { padding: 1rem; }
       #map { height: 50vh; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
       .timeline { grid-template-columns: 1fr; }
-      .map-controls { gap: 0.5rem; }
-      .filter-btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+      .filter-btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
     }
 
     /* Accessibilité */
@@ -362,18 +382,16 @@
       top: -100px;
       left: 0;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       padding: 8px;
       text-decoration: none;
-      z-index: 100;
+      z-index: 1000;
       transition: top 0.2s;
     }
 
-    .skip-link:focus {
-      top: 0;
-    }
+    .skip-link:focus { top: 0; }
 
-    :focus {
+    :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
@@ -381,165 +399,263 @@
 </head>
 <body>
 
-<!-- Lien d'évitement accessible : caché, apparaît avec Tab -->
-<a href="#main" class="skip-link">Aller au contenu principal</a>
+<a href="#main" class="skip-link" data-i18n="skip">Aller au contenu principal</a>
 
-<!-- Barre de navigation vers les autres sites -->
-<nav class="site-nav" aria-label="Liens externes">
-  <a href="https://ceae.github.io/main.github.io/substack.html">Mes traductions</a>
-  <a href="https://ceae.github.io/main.github.io/LOSTINTRANSLATIONS.html">LOSTINTRANSLATIONS</a>
-  <a href="https://ceae.github.io/main.github.io/chess.html">Chess</a>
+<!-- Barre du haut : liens vers les autres pages + choix de la langue -->
+<nav class="site-nav" data-i18n-aria="navLabel" aria-label="Liens externes">
+  <div class="nav-links">
+    <a href="https://ceae.github.io/main.github.io/substack.html" data-i18n="navTranslations">Mes traductions</a>
+    <a href="https://ceae.github.io/main.github.io/LOSTINTRANSLATIONS.html">LOSTINTRANSLATIONS</a>
+    <a href="https://ceae.github.io/main.github.io/chess.html">Chess</a>
+  </div>
+  <div class="lang-switch" role="group" data-i18n-aria="langLabel" aria-label="Langue de la page">
+    <button type="button" class="lang-btn" data-lang="fr" lang="fr" aria-pressed="true">FR</button>
+    <button type="button" class="lang-btn" data-lang="en" lang="en" aria-pressed="false">EN</button>
+    <button type="button" class="lang-btn" data-lang="es" lang="es" aria-pressed="false">ES</button>
+    <button type="button" class="lang-btn" data-lang="de" lang="de" aria-pressed="false">DE</button>
+  </div>
 </nav>
 
 <main id="main">
   <header>
-    <h1>🗺️ Mon parcours linguistique</h1>
-    <p>Explorez mes expériences d'apprentissage des langues à travers le monde</p>
-    
+    <h1>🗺️ <span data-i18n="h1">Mon parcours linguistique</span></h1>
+    <p data-i18n="subtitle">Explorez mes expériences d'apprentissage des langues à travers le monde</p>
+
     <div class="stats">
-      <div class="stat-item"><div class="stat-value">6</div><div class="stat-label">Destinations</div></div>
-      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Langues</div></div>
+      <div class="stat-item"><div class="stat-value" id="statDest">6</div><div class="stat-label" data-i18n="statDest">Destinations</div></div>
+      <div class="stat-item"><div class="stat-value" id="statLang">9</div><div class="stat-label" data-i18n="statLang">Langues</div></div>
     </div>
   </header>
 
   <section>
-    <h2>Carte interactive</h2>
-    <div class="map-controls">
-      <button class="filter-btn active" data-filter="all">Tous les points</button>
-      <button class="filter-btn" data-filter="french" style="--lang-color: #f59e0b;">Français</button>
-      <button class="filter-btn" data-filter="english" style="--lang-color: #3b82f6;">Anglais</button>
-      <button class="filter-btn" data-filter="spanish" style="--lang-color: #dc2626;">Espagnol</button>
-      <button class="filter-btn" data-filter="italian" style="--lang-color: #15803d;">Italien</button>
-      <button class="filter-btn" data-filter="german" style="--lang-color: #8b5cf6;">Allemand</button>
-      <button class="filter-btn" data-filter="chinese" style="--lang-color: #ec4899;">Chinois</button>
-      <button class="filter-btn" data-filter="turkish" style="--lang-color: #92400e;">Turc</button>
-      <button class="filter-btn" data-filter="greek" style="--lang-color: #0891b2;">Grec</button>
-      <button class="filter-btn" data-filter="russian" style="--lang-color: #be123c;">Russe</button>
-    </div>
-    <div id="map" role="region" aria-label="Carte interactive du parcours linguistique"></div>
+    <h2 data-i18n="mapTitle">Carte interactive</h2>
+    <div class="map-controls" id="mapControls"></div>
+    <div id="map" role="region" data-i18n-aria="mapAria" aria-label="Carte interactive du parcours linguistique"></div>
   </section>
 
   <section>
-    <h2>Chronologie détaillée</h2>
+    <h2 data-i18n="timelineTitle">Chronologie détaillée</h2>
     <div class="timeline" id="timeline"></div>
   </section>
 
   <footer>
-    <p>Créé avec Leaflet.js • Données à jour • Cliquez sur les marqueurs pour plus d'informations</p>
+    <p data-i18n="footer">Créé avec Leaflet.js • Données à jour • Cliquez sur les marqueurs pour plus d'informations</p>
   </footer>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
   // ============================================================
-  // 1. COULEURS DES LANGUES
+  // 1. LANGUES DE LA PAGE + TEXTES
   // ============================================================
-  const languageColors = {
-    french:  '#f59e0b', // orange
-    english: '#3b82f6', // bleu
-    spanish: '#dc2626', // rouge
-    italian: '#15803d', // vert foncé
-    german:  '#8b5cf6', // violet
-    chinese: '#ec4899', // rose
-    turkish: '#92400e', // marron
-    greek:   '#0891b2', // bleu canard
-    russian: '#be123c'  // rouge foncé
+  const SUPPORTED = ['fr', 'en', 'es', 'de'];
+  let currentLang = 'fr';
+
+  // Raccourci : tr(fr, en, es, de)
+  const tr = (fr, en, es, de) => ({ fr, en, es, de });
+
+  const UI = {
+    pageTitle:     tr('Mon parcours linguistique', 'My language journey', 'Mi trayectoria lingüística', 'Mein Sprachweg'),
+    metaDesc:      tr('Explorez mon parcours linguistique à travers une carte interactive',
+                      'Explore my language journey through an interactive map',
+                      'Explora mi trayectoria lingüística a través de un mapa interactivo',
+                      'Entdecke meinen Sprachweg auf einer interaktiven Karte'),
+    skip:          tr('Aller au contenu principal', 'Skip to main content', 'Ir al contenido principal', 'Zum Hauptinhalt springen'),
+    navLabel:      tr('Liens externes', 'External links', 'Enlaces externos', 'Externe Links'),
+    navTranslations: tr('Mes traductions', 'My translations', 'Mis traducciones', 'Meine Übersetzungen'),
+    langLabel:     tr('Langue de la page', 'Page language', 'Idioma de la página', 'Sprache der Seite'),
+    h1:            tr('Mon parcours linguistique', 'My language journey', 'Mi trayectoria lingüística', 'Mein Sprachweg'),
+    subtitle:      tr("Explorez mes expériences d'apprentissage des langues à travers le monde",
+                      'Explore my language-learning experiences around the world',
+                      'Explora mis experiencias de aprendizaje de idiomas por el mundo',
+                      'Entdecke meine Spracherfahrungen rund um die Welt'),
+    statDest:      tr('Destinations', 'Destinations', 'Destinos', 'Reiseziele'),
+    statLang:      tr('Langues', 'Languages', 'Idiomas', 'Sprachen'),
+    mapTitle:      tr('Carte interactive', 'Interactive map', 'Mapa interactivo', 'Interaktive Karte'),
+    mapAria:       tr('Carte interactive du parcours linguistique',
+                      'Interactive map of my language journey',
+                      'Mapa interactivo de mi trayectoria lingüística',
+                      'Interaktive Karte meines Sprachwegs'),
+    filterAll:     tr('Tous les points', 'All locations', 'Todos los puntos', 'Alle Orte'),
+    timelineTitle: tr('Chronologie détaillée', 'Detailed timeline', 'Cronología detallada', 'Detaillierte Zeitleiste'),
+    footer:        tr("Créé avec Leaflet.js • Données à jour • Cliquez sur les marqueurs pour plus d'informations",
+                      'Built with Leaflet.js • Up to date • Click the markers for more information',
+                      'Creado con Leaflet.js • Datos actualizados • Haz clic en los marcadores para más información',
+                      'Erstellt mit Leaflet.js • Aktueller Stand • Klicke auf die Markierungen für mehr Informationen'),
+    duration:      tr('Durée :', 'Duration:', 'Duración:', 'Dauer:'),
+    studied:       tr('Langues étudiées :', 'Languages studied:', 'Idiomas estudiados:', 'Gelernte Sprachen:'),
+    spoken:        tr('Langues utilisées au quotidien :', 'Languages used day to day:', 'Idiomas usados a diario:', 'Im Alltag verwendete Sprachen:'),
+    beginner:      tr('débutant', 'beginner', 'principiante', 'Anfänger')
+  };
+
+  const LANG_NAMES = {
+    french:  tr('Français', 'French', 'Francés', 'Französisch'),
+    english: tr('Anglais', 'English', 'Inglés', 'Englisch'),
+    spanish: tr('Espagnol', 'Spanish', 'Español', 'Spanisch'),
+    italian: tr('Italien', 'Italian', 'Italiano', 'Italienisch'),
+    german:  tr('Allemand', 'German', 'Alemán', 'Deutsch'),
+    chinese: tr('Chinois', 'Chinese', 'Chino', 'Chinesisch'),
+    turkish: tr('Turc', 'Turkish', 'Turco', 'Türkisch'),
+    greek:   tr('Grec', 'Greek', 'Griego', 'Griechisch'),
+    russian: tr('Russe', 'Russian', 'Ruso', 'Russisch')
+  };
+
+  const COUNTRY_NAMES = {
+    fr: tr('France', 'France', 'Francia', 'Frankreich'),
+    es: tr('Espagne', 'Spain', 'España', 'Spanien'),
+    de: tr('Allemagne', 'Germany', 'Alemania', 'Deutschland'),
+    it: tr('Italie', 'Italy', 'Italia', 'Italien')
   };
 
   // ============================================================
-  // 2. DONNÉES
+  // 2. COULEURS DES LANGUES (marqueurs de la carte)
+  // ============================================================
+  const languageColors = {
+    french:  '#f59e0b',
+    english: '#3b82f6',
+    spanish: '#dc2626',
+    italian: '#15803d',
+    german:  '#8b5cf6',
+    chinese: '#ec4899',
+    turkish: '#92400e',
+    greek:   '#0891b2',
+    russian: '#be123c'
+  };
+
+  // ============================================================
+  // 3. DRAPEAUX (bande à gauche des cartes de la chronologie)
+  // ============================================================
+  const FLAGS = {
+    fr: 'linear-gradient(to right, #0055A4 0 33.34%, #FFFFFF 33.34% 66.67%, #EF4135 66.67% 100%)',
+    it: 'linear-gradient(to right, #009246 0 33.34%, #FFFFFF 33.34% 66.67%, #CE2B37 66.67% 100%)',
+    es: 'linear-gradient(to bottom, #AA151B 0 25%, #F1BF00 25% 75%, #AA151B 75% 100%)',
+    de: 'linear-gradient(to bottom, #000000 0 33.34%, #DD0000 33.34% 66.67%, #FFCE00 66.67% 100%)'
+  };
+
+  // ============================================================
+  // 4. DONNÉES
   // ============================================================
   const experiences = [
     {
-      lat: 48.6236,
-      lng: 2.4257,
-      title: "Évry, France",
-      location: "Île-de-France",
-      desc: "Licence LEA à Paris-Saclay",
-      year: "2023-2026",
-      level: "🇫🇷 Langue maternelle",
-      languages: ["french", "english", "spanish", "chinese"],
-      duration: "3 ans",
-      lang_studied: "Anglais C1, Espagnol C1, Chinois débutant"
+      lat: 48.6236, lng: 2.4257,
+      city: 'Évry', country: 'fr',
+      region: tr('Île-de-France', 'Île-de-France', 'Isla de Francia', 'Île-de-France'),
+      desc: tr('Licence LEA à Paris-Saclay',
+               'Bachelor’s degree in Applied Foreign Languages (LEA) at Paris-Saclay',
+               'Grado en Lenguas Extranjeras Aplicadas (LEA) en Paris-Saclay',
+               'Bachelor in Angewandten Fremdsprachen (LEA) an der Université Paris-Saclay'),
+      year: '2023-2026',
+      level: tr('🇫🇷 Langue maternelle', '🇫🇷 Native language', '🇫🇷 Lengua materna', '🇫🇷 Muttersprache'),
+      languages: ['french', 'english', 'spanish', 'chinese'],
+      duration: tr('3 ans', '3 years', '3 años', '3 Jahre'),
+      studied: [['english', 'C1'], ['spanish', 'C1'], ['chinese', 'beginner']]
     },
     {
-      lat: 36.7163,
-      lng: -4.4706,
-      title: "Málaga, Espagne",
-      location: "Andalousie",
-      desc: "Semestre Erasmus — immersion espagnole complète",
-      year: "2024",
-      level: "🇪🇸 Avancé",
-      languages: ["english", "spanish"],
-      duration: "1 semestre",
-      lang_studied: "Anglais C1, Espagnol C1"
+      lat: 36.7163, lng: -4.4706,
+      city: 'Málaga', country: 'es',
+      region: tr('Andalousie', 'Andalusia', 'Andalucía', 'Andalusien'),
+      desc: tr('Semestre Erasmus — immersion espagnole complète',
+               'Erasmus semester — full Spanish immersion',
+               'Semestre Erasmus — inmersión total en español',
+               'Erasmus-Semester — vollständiges Eintauchen ins Spanische'),
+      year: '2024',
+      level: tr('🇪🇸 Avancé', '🇪🇸 Advanced', '🇪🇸 Avanzado', '🇪🇸 Fortgeschritten'),
+      languages: ['english', 'spanish'],
+      duration: tr('1 semestre', '1 semester', '1 semestre', '1 Semester'),
+      studied: [['english', 'C1'], ['spanish', 'C1']]
     },
     {
-      lat: 51.9604,
-      lng: 7.6212,
-      title: "Münster, Allemagne",
-      location: "Rhénanie-du-Nord-Westphalie",
-      desc: "Semestre Erasmus — perfectionnement allemand",
-      year: "2025",
-      level: "🇩🇪 B2 (cours B1 sur place)",
-      languages: ["english", "spanish", "german", "italian", "turkish"],
-      duration: "1 semestre",
-      lang_studied: "Anglais C1, Espagnol C1, Allemand B1, Italien débutant, Turc débutant"
+      lat: 51.9604, lng: 7.6212,
+      city: 'Münster', country: 'de',
+      region: tr('Rhénanie-du-Nord-Westphalie', 'North Rhine-Westphalia', 'Renania del Norte-Westfalia', 'Nordrhein-Westfalen'),
+      desc: tr('Semestre Erasmus — perfectionnement allemand',
+               'Erasmus semester — improving my German',
+               'Semestre Erasmus — perfeccionamiento del alemán',
+               'Erasmus-Semester — Vertiefung meiner Deutschkenntnisse'),
+      year: '2025',
+      level: tr('🇩🇪 B2 (cours B1 sur place)', '🇩🇪 B2 (B1 classes on site)', '🇩🇪 B2 (curso de B1 en destino)', '🇩🇪 B2 (B1-Kurs vor Ort)'),
+      languages: ['english', 'spanish', 'german', 'italian', 'turkish'],
+      duration: tr('1 semestre', '1 semester', '1 semestre', '1 Semester'),
+      studied: [['english', 'C1'], ['spanish', 'C1'], ['german', 'B1'], ['italian', 'beginner'], ['turkish', 'beginner']]
     },
     {
-      lat: 41.8162,
-      lng: -1.5198,
-      title: "Ainzón, Aragon, Espagne",
-      location: "Saragosse",
-      desc: "Au pair",
-      year: "2026",
-      level: "C1 espagnol",
-      languages: ["english", "spanish"],
-      duration: "1 mois",
-      lang_spoken: "Anglais avec les enfants dont je m'occupais, Espagnol avec les parents"
+      lat: 41.8162, lng: -1.5198,
+      city: 'Ainzón', country: 'es',
+      region: tr('Aragon (Saragosse)', 'Aragon (Zaragoza)', 'Aragón (Zaragoza)', 'Aragonien (Saragossa)'),
+      desc: tr('Au pair', 'Au pair', 'Au pair', 'Au-pair'),
+      year: '2026',
+      level: tr('C1 espagnol', 'Spanish C1', 'Español C1', 'Spanisch C1'),
+      languages: ['english', 'spanish'],
+      duration: tr('1 mois', '1 month', '1 mes', '1 Monat'),
+      spoken: tr("Anglais avec les enfants dont je m'occupais, Espagnol avec les parents",
+                 'English with the children I looked after, Spanish with the parents',
+                 'Inglés con los niños a los que cuidaba, español con los padres',
+                 'Englisch mit den Kindern, die ich betreut habe, Spanisch mit den Eltern')
     },
     {
-      lat: 44.4896,
-      lng: 11.2183,
-      title: "Zola Predosa BO, Italie",
-      location: "Bologne",
-      desc: "Au pair",
-      year: "2026",
-      level: "C1 anglais",
-      languages: ["english", "italian"],
-      duration: "3 semaines",
-      lang_spoken: "Anglais avec toute la famille mais ils parlaient toujours italien entre eux donc grande amélioration en compréhension orale"
+      lat: 44.4896, lng: 11.2183,
+      city: 'Zola Predosa (BO)', country: 'it',
+      region: tr('Bologne', 'Bologna', 'Bolonia', 'Bologna'),
+      desc: tr('Au pair', 'Au pair', 'Au pair', 'Au-pair'),
+      year: '2026',
+      level: tr('C1 anglais', 'English C1', 'Inglés C1', 'Englisch C1'),
+      languages: ['english', 'italian'],
+      duration: tr('3 semaines', '3 weeks', '3 semanas', '3 Wochen'),
+      spoken: tr('Anglais avec toute la famille mais ils parlaient toujours italien entre eux donc grande amélioration en compréhension orale',
+                 'English with the whole family, but they always spoke Italian among themselves, so my listening comprehension improved a lot',
+                 'Inglés con toda la familia, pero entre ellos siempre hablaban italiano, así que mejoré mucho mi comprensión oral',
+                 'Englisch mit der ganzen Familie, aber untereinander sprachen sie immer Italienisch, wodurch sich mein Hörverstehen stark verbessert hat')
     },
     {
-      lat: 40.977858,
-      lng: -5.678768,
-      title: "Salamanca, Espagne",
-      location: "Castilla y León",
-      desc: "Voluntariado Europeo",
-      year: "2026-2027",
-      languages: ["spanish", "italian", "greek", "russian"],
-      duration: "9 mois",
-      lang_spoken: "Espagnol au quotidien. J'ai aussi profité d'avoir des colocataires de toute l'Europe pour apprendre l'italien, un peu de grec et de russe."
+      lat: 40.977858, lng: -5.678768,
+      city: 'Salamanca', country: 'es',
+      region: tr('Castille-et-León', 'Castile and León', 'Castilla y León', 'Kastilien und León'),
+      desc: tr('Volontariat européen', 'European Voluntary Service', 'Voluntariado Europeo', 'Europäischer Freiwilligendienst'),
+      year: '2026-2027',
+      languages: ['spanish', 'italian', 'greek', 'russian'],
+      duration: tr('9 mois', '9 months', '9 meses', '9 Monate'),
+      spoken: tr("Espagnol au quotidien. J'ai aussi profité d'avoir des colocataires de toute l'Europe pour apprendre l'italien, un peu de grec et de russe.",
+                 'Spanish in daily life. I also made the most of having flatmates from all over Europe to learn Italian, a bit of Greek and some Russian.',
+                 'Español en el día a día. También aproveché tener compañeros de piso de toda Europa para aprender italiano, un poco de griego y algo de ruso.',
+                 'Spanisch im Alltag. Außerdem habe ich die Mitbewohner aus ganz Europa genutzt, um Italienisch, ein bisschen Griechisch und etwas Russisch zu lernen.')
     }
   ];
 
   // ============================================================
-  // 3. INITIALISATION DE LA CARTE
+  // 5. HELPERS
+  // ============================================================
+  const t = key => UI[key][currentLang];
+  const countryName = exp => COUNTRY_NAMES[exp.country][currentLang];
+
+  function formatStudied(list) {
+    return list.map(([lang, level]) => {
+      const lv = level === 'beginner' ? t('beginner') : level;
+      return `${LANG_NAMES[lang][currentLang]} ${level === 'beginner' ? '(' + lv + ')' : lv}`;
+    }).join(', ');
+  }
+
+  function detectLang() {
+    try {
+      const saved = localStorage.getItem('lang');
+      if (SUPPORTED.includes(saved)) return saved;
+    } catch (e) {}
+    const nav = (navigator.language || 'fr').slice(0, 2).toLowerCase();
+    return SUPPORTED.includes(nav) ? nav : 'fr';
+  }
+
+  // ============================================================
+  // 6. CARTE
   // ============================================================
   let currentFilter = 'all';
   const markers = [];
   const map = L.map('map').setView([46.6, 2.5], 4);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 18,
   }).addTo(map);
 
-  // ============================================================
-  // 4. FONCTIONS POUR LES MARQUEURS MULTICOLORES
-  // ============================================================
-
-  // Construit un dégradé conique : une part égale par langue
+  // Dégradé conique : une part égale par langue
   function buildLanguageGradient(languages) {
     const step = 360 / languages.length;
     const stops = languages.map((lang, i) => {
@@ -549,11 +665,9 @@
     return `conic-gradient(${stops.join(', ')})`;
   }
 
-  // Crée une icône Leaflet en forme d'épingle, colorée par langue
   function createLanguageMarker(languages) {
-    const gradient = buildLanguageGradient(languages);
     return L.divIcon({
-      html: `<div class="custom-marker" style="background: ${gradient};"><span></span></div>`,
+      html: `<div class="custom-marker" style="background: ${buildLanguageGradient(languages)};"><span></span></div>`,
       iconSize: [34, 34],
       iconAnchor: [17, 34],
       popupAnchor: [0, -34],
@@ -561,35 +675,26 @@
     });
   }
 
-  // ============================================================
-  // 5. CRÉATION DES MARQUEURS
-  // ============================================================
-  experiences.forEach(exp => {
-    const marker = L.marker([exp.lat, exp.lng], {
-      icon: createLanguageMarker(exp.languages)
-    }).addTo(map);
-
-    const popupContent = `
-      <div class="popup-title">${exp.title}</div>
-      <div class="popup-location">${exp.location}</div>
-      <div class="popup-description">${exp.desc}</div>
+  function popupHTML(exp) {
+    return `
+      <div class="popup-title">${exp.city}, ${countryName(exp)}</div>
+      <div class="popup-location">${exp.region[currentLang]}</div>
+      <div class="popup-description">${exp.desc[currentLang]}</div>
       <div class="popup-meta">
-        ${exp.level ? `<span class="popup-level">${exp.level}</span>` : ''}
+        ${exp.level ? `<span class="popup-level">${exp.level[currentLang]}</span>` : '<span></span>'}
         <span class="popup-year">${exp.year}</span>
       </div>
     `;
+  }
 
-    marker.bindPopup(popupContent);
-
-    // Infos stockées sur le marqueur pour le filtrage
+  experiences.forEach(exp => {
+    const marker = L.marker([exp.lat, exp.lng], { icon: createLanguageMarker(exp.languages) }).addTo(map);
+    marker.bindPopup(popupHTML(exp));
     marker.languages = exp.languages;
-
+    marker.exp = exp;
     markers.push(marker);
   });
 
-  // ============================================================
-  // 6. FILTRAGE PAR LANGUE
-  // ============================================================
   function updateMarkers(filter) {
     markers.forEach(marker => {
       const isVisible = filter === 'all' || marker.languages.includes(filter);
@@ -599,39 +704,88 @@
     });
   }
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentFilter = btn.dataset.filter;
-      updateMarkers(currentFilter);
-      console.log(`Filtrage par: ${btn.textContent}`);
+  // ============================================================
+  // 7. FILTRES
+  // ============================================================
+  const controls = document.getElementById('mapControls');
+
+  function renderFilters() {
+    let html = `<button class="filter-btn${currentFilter === 'all' ? ' active' : ''}" data-filter="all">${t('filterAll')}</button>`;
+    Object.keys(languageColors).forEach(lang => {
+      html += `<button class="filter-btn${currentFilter === lang ? ' active' : ''}" data-filter="${lang}" style="--lang-color: ${languageColors[lang]};">${LANG_NAMES[lang][currentLang]}</button>`;
     });
+    controls.innerHTML = html;
+  }
+
+  controls.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    currentFilter = btn.dataset.filter;
+    controls.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+    updateMarkers(currentFilter);
   });
 
   // ============================================================
-  // 7. CHRONOLOGIE
+  // 8. CHRONOLOGIE
   // ============================================================
   const timeline = document.getElementById('timeline');
-  experiences.forEach(exp => {
-    const item = document.createElement('div');
-    item.className = 'timeline-item';
-    const languageInfo = exp.lang_studied
-      ? `<strong>Langues étudiées:</strong> ${exp.lang_studied}`
-      : `<strong>Langues utilisées au quotidien:</strong> ${exp.lang_spoken}`;
-    item.innerHTML = `
-      <div class="timeline-year">${exp.year}</div>
-      <div class="timeline-title">${exp.title}</div>
-      <div class="timeline-location">📍 ${exp.location}</div>
-      <div class="timeline-description">${exp.desc}</div>
-      <div style="font-size: 0.85rem; opacity: 0.75; margin-bottom: 0.5rem;">
-        <strong>Durée:</strong> ${exp.duration} • ${languageInfo}
-      </div>
-      ${exp.level ? `<span class="timeline-level">${exp.level}</span>` : ''}
-    `;
-    timeline.appendChild(item);
+
+  function renderTimeline() {
+    timeline.innerHTML = '';
+    experiences.forEach(exp => {
+      const item = document.createElement('div');
+      item.className = 'timeline-item';
+      const info = exp.studied
+        ? `<strong>${t('studied')}</strong> ${formatStudied(exp.studied)}`
+        : `<strong>${t('spoken')}</strong> ${exp.spoken[currentLang]}`;
+      const name = countryName(exp);
+      item.innerHTML = `
+        <div class="flag" role="img" aria-label="${name}" title="${name}" style="background: ${FLAGS[exp.country]};"></div>
+        <div class="timeline-body">
+          <div class="timeline-year">${exp.year}</div>
+          <div class="timeline-title">${exp.city}, ${name}</div>
+          <div class="timeline-location">📍 ${exp.region[currentLang]}</div>
+          <div class="timeline-description">${exp.desc[currentLang]}</div>
+          <div class="timeline-meta"><strong>${t('duration')}</strong> ${exp.duration[currentLang]} • ${info}</div>
+          ${exp.level ? `<span class="timeline-level">${exp.level[currentLang]}</span>` : ''}
+        </div>
+      `;
+      timeline.appendChild(item);
+    });
+  }
+
+  // ============================================================
+  // 9. CHANGEMENT DE LANGUE
+  // ============================================================
+  function setLang(lang) {
+    if (!SUPPORTED.includes(lang)) lang = 'fr';
+    currentLang = lang;
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+
+    document.documentElement.lang = lang;
+    document.title = t('pageTitle');
+    document.getElementById('metaDesc').setAttribute('content', t('metaDesc'));
+
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.lang === lang ? 'true' : 'false');
+    });
+
+    document.getElementById('statDest').textContent = experiences.length;
+    document.getElementById('statLang').textContent = Object.keys(languageColors).length;
+
+    renderFilters();
+    renderTimeline();
+    markers.forEach(m => m.setPopupContent(popupHTML(m.exp)));
+    updateMarkers(currentFilter);
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
   });
 
+  setLang(detectLang());
 </script>
 
 </body>
